@@ -1,0 +1,95 @@
+name: Build IPA
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      APP_NAME: Orcamento
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Versão do Xcode
+        run: xcodebuild -version
+
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+
+      - name: Gerar projeto Xcode
+        run: xcodegen generate
+
+      - name: Executar testes unitários (simulador)
+        run: |
+          set -euo pipefail
+          UDID=$(xcrun simctl list devices available -j | jq -r '[.devices | to_entries[] | select(.key | contains("iOS")) | .value[] | select(.name | startswith("iPhone"))][0].udid')
+          echo "Simulador: $UDID"
+          xcodebuild test \
+            -project "$APP_NAME.xcodeproj" \
+            -scheme "$APP_NAME" \
+            -destination "id=$UDID" \
+            -derivedDataPath build/test \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee build-test.log
+
+      - name: Compilar Release (iphoneos, sem assinatura)
+        run: |
+          set -euo pipefail
+          xcodebuild build \
+            -project "$APP_NAME.xcodeproj" \
+            -scheme "$APP_NAME" \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build/release \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Montar .ipa
+        run: |
+          set -euo pipefail
+          APP_PATH="build/release/Build/Products/Release-iphoneos/$APP_NAME.app"
+          test -d "$APP_PATH"
+          rm -rf Payload "$APP_NAME.ipa"
+          mkdir Payload
+          cp -R "$APP_PATH" Payload/
+          zip -qry "$APP_NAME.ipa" Payload
+          ls -lh "$APP_NAME.ipa"
+
+      - name: Validar .ipa
+        run: |
+          set -euo pipefail
+          mkdir -p check && cd check
+          unzip -q "../$APP_NAME.ipa"
+          PLIST="Payload/$APP_NAME.app/Info.plist"
+          plutil -lint "$PLIST"
+          MIN=$(plutil -extract MinimumOSVersion raw "$PLIST")
+          echo "MinimumOSVersion=$MIN"
+          test "$MIN" = "17.0"
+          echo "CFBundleIdentifier=$(plutil -extract CFBundleIdentifier raw "$PLIST")"
+          # Nenhum ficheiro de entitlements embutido (app não assinada).
+          if find "Payload/$APP_NAME.app" -name '*.entitlements' -o -name '*.xcent' | grep -q .; then
+            echo "Encontrado ficheiro de entitlements inesperado"; exit 1
+          fi
+          # Nenhuma extensão (apenas um target).
+          if [ -d "Payload/$APP_NAME.app/PlugIns" ] || [ -d "Payload/$APP_NAME.app/Extensions" ]; then
+            echo "Encontradas extensões inesperadas"; exit 1
+          fi
+          ls "Payload/$APP_NAME.app"
+
+      - name: Publicar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-ipa
+          path: ${{ env.APP_NAME }}.ipa
+          if-no-files-found: error
