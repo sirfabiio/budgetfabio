@@ -139,12 +139,14 @@ struct TransactionEditorView: View {
             MerchantRuleStore.learn(merchant: target.merchant, category: category, context: context)
         }
         try? context.save()
+        VaultIntegrity.enforce(context)
         dismiss()
     }
 
     private func delete() {
         if let transaction { context.delete(transaction) }
         try? context.save()
+        VaultIntegrity.enforce(context)
         dismiss()
     }
 }

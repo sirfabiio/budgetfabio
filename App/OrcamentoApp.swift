@@ -24,5 +24,9 @@ struct OrcamentoApp: App {
 enum AppLifecycle {
     static func didBecomeActive(_ context: ModelContext) {
         Persistence.seedIfNeeded(context)
+        RecurringService.catchUp(context)
+        VaultIntegrity.enforce(context)
+        let enabled = UserDefaults.standard.object(forKey: SettingsKeys.notificationsEnabled) as? Bool ?? true
+        RecurringService.rescheduleNotifications(context, enabled: enabled)
     }
 }

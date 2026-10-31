@@ -41,6 +41,7 @@ struct LedgerView: View {
                                 Button(role: .destructive) {
                                     context.delete(t)
                                     try? context.save()
+                                    VaultIntegrity.enforce(context)
                                 } label: { Label("Eliminar", systemImage: "trash") }
                             }
                     }

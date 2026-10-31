@@ -97,7 +97,7 @@ jobs:
       - name: Resumo dos testes e do .ipa
         if: always()
         run: |
-          echo "=== Xcode ==="; xcodebuild -version | head -1
+          echo "=== Xcode ==="; xcodebuild -version
           echo "=== Testes ==="
           grep -E "Test Case '.*' (passed|failed)|Executed [0-9]+ test|\*\* TEST (SUCCEEDED|FAILED)" build-test.log | sed -E "s/^.*Test Case '-\[OrcamentoTests\.//; s/\]' / /" || true
           echo "=== App Intents ==="

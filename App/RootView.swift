@@ -9,6 +9,8 @@ struct RootView: View {
                 .tabItem { Label("Histórico", systemImage: "list.bullet.rectangle") }
             NavigationStack { BudgetsView() }
                 .tabItem { Label("Orçamentos", systemImage: "gauge.with.dots.needle.33percent") }
+            NavigationStack { VaultView() }
+                .tabItem { Label("Cofre", systemImage: "lock.square.stack.fill") }
             NavigationStack { MoreView() }
                 .tabItem { Label("Mais", systemImage: "ellipsis.circle") }
         }
@@ -20,8 +22,19 @@ struct MoreView: View {
         List {
             Section("Organização") {
                 NavigationLink { CategoriesView() } label: { Label("Categorias", systemImage: "square.grid.2x2") }
+                NavigationLink { RecurringView() } label: { Label("Recorrentes", systemImage: "repeat") }
+                NavigationLink { GoalsView() } label: { Label("Objetivos", systemImage: "target") }
+                NavigationLink { SplitGroupsView() } label: { Label("Divisão de despesas", systemImage: "person.3") }
             }
-            Section("Definições") {
+            Section("Análise e dados") {
+                NavigationLink { AnalyticsView() } label: { Label("Análise", systemImage: "chart.xyaxis.line") }
+                NavigationLink { ImportExportView() } label: { Label("Importar e exportar", systemImage: "arrow.up.arrow.down.square") }
+            }
+            Section("Automação") {
+                NavigationLink { ApplePayHelpView() } label: { Label("Captura Apple Pay", systemImage: "wave.3.right.circle") }
+                NavigationLink { ReviewQueueView() } label: { Label("Por rever", systemImage: "exclamationmark.bubble") }
+            }
+            Section {
                 NavigationLink { SettingsView() } label: { Label("Definições", systemImage: "gearshape") }
             }
         }

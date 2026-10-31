@@ -44,4 +44,19 @@ enum VaultCalculator {
         if amount <= 0 { return .nonPositiveAmount }
         return amount > checking ? .exceedsChecking(available: max(0, checking)) : nil
     }
+
+    /// Se o cofre baixar (ex.: um depósito eliminado), reduz as afetações a partir do fim
+    /// da lista até a soma voltar a caber no saldo do cofre.
+    static func trimAllocations(_ allocations: [Cents], vault: Cents) -> [Cents] {
+        var result = allocations
+        var excess = allocations.reduce(0, +) - max(0, vault)
+        var i = result.count - 1
+        while excess > 0, i >= 0 {
+            let cut = min(result[i], excess)
+            result[i] -= cut
+            excess -= cut
+            i -= 1
+        }
+        return result
+    }
 }
