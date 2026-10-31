@@ -102,3 +102,6 @@ jobs:
           grep -E "Test Case '.*' (passed|failed)|Executed [0-9]+ test|\*\* TEST (SUCCEEDED|FAILED)" build-test.log | sed -E "s/^.*Test Case '-\[OrcamentoTests\.//; s/\]' / /" || true
           echo "=== App Intents ==="
           ls "check/Payload/$APP_NAME.app/Metadata.appintents" 2>/dev/null || echo "sem Metadata.appintents"
+          grep -aoE "RegisterExpenseIntent|OrcamentoShortcuts|Registar despesa" "check/Payload/$APP_NAME.app/Metadata.appintents/extract.actionsdata" 2>/dev/null | sort | uniq -c || true
+          echo "=== Entitlements embutidos ==="
+          codesign -d --entitlements - "check/Payload/$APP_NAME.app" 2>&1 | head -5 || true

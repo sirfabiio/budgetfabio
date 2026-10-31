@@ -92,12 +92,12 @@ struct DashboardView: View {
     }
 }
 
-/// Ponto de extensão para secções extra do painel (ver Fase 4).
+/// Secções extra do painel (ver README, "Extras").
 struct ExtraDashboardSections: View {
     var snapshots: [TxSnapshot]
     var checking: Cents
     var monthExpense: Cents
-    var body: some View { EmptyView() }
+    var body: some View { ForecastSection(checking: checking) }
 }
 
 private struct CashFlowRow: View {

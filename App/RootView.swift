@@ -1,7 +1,20 @@
 import SwiftUI
 
 struct RootView: View {
+    @StateObject private var lock = AppLock()
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
+        tabs
+            .overlay {
+                if lock.isLocked { LockScreen(lock: lock) }
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .background { lock.lockIfEnabled() }
+            }
+    }
+
+    private var tabs: some View {
         TabView {
             NavigationStack { DashboardView() }
                 .tabItem { Label("Painel", systemImage: "chart.pie.fill") }
