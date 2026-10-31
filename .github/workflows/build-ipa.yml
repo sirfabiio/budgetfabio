@@ -93,3 +93,12 @@ jobs:
           name: ${{ env.APP_NAME }}-ipa
           path: ${{ env.APP_NAME }}.ipa
           if-no-files-found: error
+
+      - name: Resumo dos testes e do .ipa
+        if: always()
+        run: |
+          echo "=== Xcode ==="; xcodebuild -version | head -1
+          echo "=== Testes ==="
+          grep -E "Test Case '.*' (passed|failed)|Executed [0-9]+ test|\*\* TEST (SUCCEEDED|FAILED)" build-test.log | sed -E "s/^.*Test Case '-\[OrcamentoTests\.//; s/\]' / /" || true
+          echo "=== App Intents ==="
+          ls "check/Payload/$APP_NAME.app/Metadata.appintents" 2>/dev/null || echo "sem Metadata.appintents"
