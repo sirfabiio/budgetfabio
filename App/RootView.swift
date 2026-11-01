@@ -1,11 +1,30 @@
 import SwiftUI
 
+enum AppTab: Hashable {
+    case home, ledger, budgets, vault, more
+}
+
+/// Estado de navegação partilhado (ex.: "Ver tudo" no painel abre o Histórico).
+@MainActor
+final class AppRouter: ObservableObject {
+    @Published var tab: AppTab = .home
+    @Published var showNewTransaction = false
+}
+
 struct RootView: View {
     @StateObject private var lock = AppLock()
+    @StateObject private var router = AppRouter()
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage(SettingsKeys.appearance) private var appearance = AppearanceMode.automatic.rawValue
 
     var body: some View {
         tabs
+            .environmentObject(router)
+            .tint(Theme.primary)
+            .preferredColorScheme((AppearanceMode(rawValue: appearance) ?? .automatic).colorScheme)
+            .sheet(isPresented: $router.showNewTransaction) {
+                TransactionEditorView(transaction: nil)
+            }
             .overlay {
                 if lock.isLocked { LockScreen(lock: lock) }
             }
@@ -15,42 +34,41 @@ struct RootView: View {
     }
 
     private var tabs: some View {
-        TabView {
+        TabView(selection: $router.tab) {
             NavigationStack { DashboardView() }
-                .tabItem { Label("Painel", systemImage: "chart.pie.fill") }
+                .tabItem { Label("Início", systemImage: "house") }
+                .tag(AppTab.home)
             NavigationStack { LedgerView() }
-                .tabItem { Label("Histórico", systemImage: "list.bullet.rectangle") }
+                .tabItem { Label("Histórico", systemImage: "list.bullet.rectangle.portrait") }
+                .tag(AppTab.ledger)
             NavigationStack { BudgetsView() }
-                .tabItem { Label("Orçamentos", systemImage: "gauge.with.dots.needle.33percent") }
+                .tabItem { Label("Orçamentos", systemImage: "chart.pie") }
+                .tag(AppTab.budgets)
             NavigationStack { VaultView() }
-                .tabItem { Label("Cofre", systemImage: "lock.square.stack.fill") }
+                .tabItem { Label("Cofre", systemImage: "lock.square") }
+                .tag(AppTab.vault)
             NavigationStack { MoreView() }
-                .tabItem { Label("Mais", systemImage: "ellipsis.circle") }
+                .tabItem { Label("Mais", systemImage: "ellipsis") }
+                .tag(AppTab.more)
         }
     }
 }
 
-struct MoreView: View {
+/// Botão flutuante "+" para nova transação.
+struct NewTransactionFAB: View {
+    @EnvironmentObject private var router: AppRouter
+
     var body: some View {
-        List {
-            Section("Organização") {
-                NavigationLink { CategoriesView() } label: { Label("Categorias", systemImage: "square.grid.2x2") }
-                NavigationLink { RecurringView() } label: { Label("Recorrentes", systemImage: "repeat") }
-                NavigationLink { GoalsView() } label: { Label("Objetivos", systemImage: "target") }
-                NavigationLink { SplitGroupsView() } label: { Label("Divisão de despesas", systemImage: "person.3") }
-            }
-            Section("Análise e dados") {
-                NavigationLink { AnalyticsView() } label: { Label("Análise", systemImage: "chart.xyaxis.line") }
-                NavigationLink { ImportExportView() } label: { Label("Importar e exportar", systemImage: "arrow.up.arrow.down.square") }
-            }
-            Section("Automação") {
-                NavigationLink { ApplePayHelpView() } label: { Label("Captura Apple Pay", systemImage: "wave.3.right.circle") }
-                NavigationLink { ReviewQueueView() } label: { Label("Por rever", systemImage: "exclamationmark.bubble") }
-            }
-            Section {
-                NavigationLink { SettingsView() } label: { Label("Definições", systemImage: "gearshape") }
-            }
+        Button { router.showNewTransaction = true } label: {
+            Image(systemName: "plus")
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(width: 60, height: 60)
+                .background(Theme.primary, in: Circle())
+                .shadow(color: Theme.primary.opacity(0.35), radius: 12, y: 6)
         }
-        .navigationTitle("Mais")
+        .accessibilityLabel("Nova transação")
+        .padding(.trailing, Theme.margin)
+        .padding(.bottom, 12)
     }
 }

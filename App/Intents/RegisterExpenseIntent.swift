@@ -47,7 +47,7 @@ enum ExpenseCapture {
 
 struct RegisterExpenseIntent: AppIntent {
     static var title: LocalizedStringResource = "Registar despesa"
-    static var description = IntentDescription("Regista uma despesa no Orçamento sem abrir a app. Pensado para a automação de Transação do Apple Pay nos Atalhos.")
+    static var description = IntentDescription("Regista uma despesa no Budget do Fábio sem abrir a app. Pensado para a automação de Transação do Apple Pay nos Atalhos.")
     static var openAppWhenRun: Bool = false
 
     @Parameter(title: "Valor", description: "Ex.: 12,50 € ou €12.50")

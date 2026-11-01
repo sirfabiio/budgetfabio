@@ -74,4 +74,18 @@ enum RecurrenceEngine {
         }
         return nil
     }
+
+    /// Equivalente mensal de um valor recorrente, em cêntimos (arredondado ao cêntimo).
+    /// Diária: ×365/12; semanal: ×52/12; mensal: ×1; anual: ÷12 — tudo dividido pelo intervalo.
+    static func monthlyEquivalent(amount: Cents, frequency: RecurrenceFrequency, interval: Int) -> Cents {
+        let n = max(1, interval)
+        let (num, den): (Int, Int)
+        switch frequency {
+        case .daily: (num, den) = (365, 12 * n)
+        case .weekly: (num, den) = (52, 12 * n)
+        case .monthly: (num, den) = (1, n)
+        case .yearly: (num, den) = (1, 12 * n)
+        }
+        return (amount * num + den / 2) / den
+    }
 }

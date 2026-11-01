@@ -49,3 +49,28 @@ final class RecurrenceEngineTests: XCTestCase {
         XCTAssertEqual(RecurrenceEngine.nextOccurrence(s, after: dayStart(2026, 7, 1)), dayStart(2026, 7, 8))
     }
 }
+
+final class MonthlyEquivalentTests: XCTestCase {
+    func testMonthlyEquivalent() {
+        XCTAssertEqual(RecurrenceEngine.monthlyEquivalent(amount: 65000, frequency: .monthly, interval: 1), 65000)
+        XCTAssertEqual(RecurrenceEngine.monthlyEquivalent(amount: 24000, frequency: .yearly, interval: 1), 2000)
+        XCTAssertEqual(RecurrenceEngine.monthlyEquivalent(amount: 1200, frequency: .weekly, interval: 1), 5200)
+        XCTAssertEqual(RecurrenceEngine.monthlyEquivalent(amount: 100, frequency: .daily, interval: 1), 3042)
+        XCTAssertEqual(RecurrenceEngine.monthlyEquivalent(amount: 3000, frequency: .monthly, interval: 3), 1000)
+    }
+}
+
+final class AmountKeypadTests: XCTestCase {
+    func testTypingAmount() {
+        var t = ""
+        for k in ["4", "2", ",", "5", "0", "9"] { t = AmountKeypad.press(k, on: t) }
+        XCTAssertEqual(t, "42,50")
+        XCTAssertEqual(AmountParser.parseCents(t), 4250)
+        t = AmountKeypad.press("⌫", on: t)
+        XCTAssertEqual(t, "42,5")
+        XCTAssertEqual(AmountKeypad.press(",", on: ""), "0,")
+        XCTAssertEqual(AmountKeypad.press(",", on: "3,"), "3,")
+        XCTAssertEqual(AmountKeypad.press("7", on: "0"), "7")
+        XCTAssertEqual(AmountKeypad.press("1", on: "123456789"), "123456789")
+    }
+}

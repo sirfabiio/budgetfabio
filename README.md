@@ -1,4 +1,4 @@
-# Orçamento — finanças pessoais para iPhone
+# Budget do Fábio — finanças pessoais para iPhone
 
 App nativa de finanças pessoais em **Swift/SwiftUI**, para uso pessoal, **100% offline** e sem backend. A interface, as datas e a moeda (EUR) estão em português europeu.
 
@@ -6,14 +6,15 @@ App nativa de finanças pessoais em **Swift/SwiftUI**, para uso pessoal, **100% 
 - Zero dependências de terceiros.
 - Projeto Xcode gerado com [XcodeGen](https://github.com/yonaskolb/XcodeGen) a partir de `project.yml`. Pode ser escrito em Windows e é gerado no CI.
 - Um único target, sem extensões e sem capabilities pagas. Pode ser instalado com um Apple ID gratuito via Sideloadly (ver [SIDELOAD.md](SIDELOAD.md)).
+- Nome no ecrã principal: **Budget do Fábio**, com ícone próprio (`App/Assets.xcassets/AppIcon`). O bundle ID continua a ser `pt.fabio.orcamento` (alterá-lo fazia perder os dados nas reinstalações) e o ficheiro gerado continua a chamar-se `Orcamento.ipa`.
 - Todos os valores monetários são guardados como **inteiros em cêntimos** (`Int`), nunca como `Double`. O `Double` só aparece na conversão para os eixos dos gráficos (`MoneyFormat.chartValue`).
 
 ## Módulos
 
 | Módulo | Pasta | Onde está na app |
 | --- | --- | --- |
-| Painel (saldo à ordem, fluxo do mês, despesas por categoria) | `App/Dashboard` | Separador **Painel** |
-| Registo de transações (criar, editar, eliminar) | `App/Transactions` | Botão **+** no Painel e no Histórico |
+| Painel (saldo à ordem, fluxo do mês, despesas por categoria) | `App/Dashboard` | Separador **Início** |
+| Registo de transações (criar, editar, eliminar) | `App/Transactions` | Botão **+** no Início e no Histórico |
 | Categorias (cor, ícone, arquivo, conjunto inicial em PT) | `App/Categories` | **Mais → Categorias** |
 | Orçamentos (global e por categoria, com estados) | `App/Budgets` | Separador **Orçamentos** |
 | Histórico/Ledger (agrupado por dia, pesquisa, filtros, total) | `App/Ledger` | Separador **Histórico** |
@@ -24,7 +25,18 @@ App nativa de finanças pessoais em **Swift/SwiftUI**, para uso pessoal, **100% 
 | Análise (património, taxa de poupança, mês a mês) | `App/Analytics` | **Mais → Análise** |
 | Importar/Exportar (CSV, PDF mensal, cópia de segurança JSON) | `App/ImportExport` | **Mais → Importar e exportar** |
 | Captura Apple Pay (App Intent + ajuda + fila "por rever") | `App/Intents` | **Mais → Captura Apple Pay** / **Por rever**, e app Atalhos |
-| Extras (Face ID, previsão de fim de mês) | `App/Extras` | **Mais → Definições** e **Painel** |
+| Extras (Face ID, previsão de fim de mês) | `App/Extras` | **Mais** e **Início** |
+
+## Design
+
+A interface segue os 11 ecrãs desenhados no Stitch ("Minimalist iOS Finance App"), guardados como referência em `design/stitch/` (PNG + HTML). O sistema de design está em `App/Shared/Theme.swift` e `App/Shared/Components.swift`:
+
+- **Cores** do Stitch: fundo `#F9F9F7`, cartões brancos com contorno subtil, primária `#3B3BF5`, e estados verde, laranja e vermelho. Cada cor tem uma variante para modo escuro. A aparência pode ser escolhida em *Mais → Aparência* (Automático, Claro ou Escuro).
+- **Componentes**: cartões com raio de 24 pt, rótulos em maiúsculas (`Eyebrow`), valores grandes (`HeroAmount`), chips de filtro, badges de estado, barras e anéis de progresso, botões primários e em cápsula, avatares com iniciais e um teclado numérico para o montante.
+- **Tipografia**: o Stitch usa Hanken Grotesk. A app usa a fonte do sistema (SF Pro), que é parecida e mantém o Dynamic Type sem embutir ficheiros de fontes de terceiros.
+- **Ícones**: o Stitch usa Material Symbols. A app usa os equivalentes em SF Symbols.
+
+Alguns elementos do Stitch foram adaptados para não mostrar dados inventados nem funcionalidades que a app não tem. A app não tem rendimento (TANB) no cofre, cópia de segurança no iCloud, perfil com email nem configuração automática do atalho. Nos sítios onde o Stitch os mostra, a app apresenta informação real: o saldo à ordem, a cópia de segurança em JSON, o nome da app e um botão que abre a app Atalhos.
 
 ## Arquitetura
 
@@ -33,7 +45,8 @@ SwiftUI + SwiftData com MVVM leve. As views leem os dados com `@Query` e delegam
 ```
 App/
 ├── OrcamentoApp.swift        # @main, contentor SwiftData, ciclo de vida (seed, catch-up, notificações)
-├── RootView.swift            # TabView: Painel · Histórico · Orçamentos · Cofre · Mais
+├── RootView.swift            # TabView: Início · Histórico · Orçamentos · Cofre · Mais (+ AppRouter)
+├── Assets.xcassets           # Ícone da app, logótipo e cor de destaque
 ├── Shared/                   # Modelos SwiftData, tipos de domínio, formatação pt-PT, AmountParser, helpers de UI
 ├── Dashboard/  BalanceCalculator.swift (puro) + DashboardView
 ├── Budgets/    BudgetCalculator.swift (puro) + BudgetsView
@@ -74,7 +87,7 @@ O workflow [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml) 
 2. **Testes unitários** num simulador iPhone (`xcodebuild test`). Se algum falhar, o build falha.
 3. Build **Release** para `iphoneos` sem assinatura: `CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""`.
 4. Monta `Payload/Orcamento.app` e comprime para `Orcamento.ipa`.
-5. Valida o `.ipa`: `Info.plist` válido, `MinimumOSVersion = 17.0`, sem ficheiros de entitlements e sem extensões (`PlugIns/`, `Extensions/`).
+5. Valida o `.ipa`: `Info.plist` válido, `MinimumOSVersion = 17.0`, nome "Budget do Fábio", ícone compilado (`CFBundleIconName` e `Assets.car`), sem ficheiros de entitlements e sem extensões (`PlugIns/`, `Extensions/`).
 6. Publica o artifact **`Orcamento-ipa`**.
 7. Imprime um resumo com a versão do Xcode, os testes executados e a presença de `Metadata.appintents` (prova de que o App Intent foi extraído).
 

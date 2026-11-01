@@ -7,61 +7,169 @@ struct RecurringView: View {
     @AppStorage(SettingsKeys.notificationsEnabled) private var notificationsEnabled = true
     @State private var editing: RecurringRule?
     @State private var creating = false
+    @State private var categoryFilter: UUID? = nil
 
     var body: some View {
-        List {
-            Section {
-                Toggle("Notificações de lembrete", isOn: $notificationsEnabled)
-                    .onChange(of: notificationsEnabled) { _, on in
-                        Task {
-                            if on { _ = await RecurringService.requestAuthorization() }
-                            RecurringService.rescheduleNotifications(context, enabled: on)
+        let active = rules.filter { $0.isActive && $0.kind == .expense }
+        let monthly = active.reduce(0) { $0 + RecurrenceEngine.monthlyEquivalent(amount: $1.amountCents, frequency: $1.frequency, interval: $1.interval) }
+        let nexts = active.compactMap { nextDate($0) }.sorted()
+        let filterCategories = uniqueCategories()
+        let shown = rules.filter { categoryFilter == nil || $0.category?.id == categoryFilter }
+
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                ScreenHeader(eyebrow: "Gestão periódica", title: "Recorrentes") {
+                    Button { creating = true } label: { Label("Nova", systemImage: "plus") }
+                        .buttonStyle(PillButtonStyle(filled: true))
+                }
+
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Eyebrow("Total mensal previsto")
+                            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                HeroAmount(cents: monthly)
+                                Text("/ mês").font(.subheadline).foregroundStyle(Theme.textSecondary)
+                            }
+                        }
+                        Spacer()
+                        IconTile(systemName: "calendar", colorHex: "#3B3BF5", size: 48)
+                    }
+                    Rectangle().fill(Theme.outline).frame(height: 1)
+                    HStack {
+                        Circle().fill(Theme.primary).frame(width: 8, height: 8)
+                        Text("\(active.count) despes\(active.count == 1 ? "a ativa" : "as ativas")").font(.subheadline)
+                        Spacer()
+                        if let first = nexts.first {
+                            Text("Próxima: ").font(.subheadline).foregroundColor(Theme.textSecondary)
+                                + Text(DateFormat.rowDate(first)).font(.subheadline.weight(.semibold))
                         }
                     }
-            } footer: {
-                Text("O iOS não garante execução em segundo plano: as ocorrências em atraso são criadas sempre que abres a app.")
+                }
+                .card(padding: 24)
+                .accessibilityElement(children: .combine)
+
+                if !filterCategories.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            Button { categoryFilter = nil } label: {
+                                ChipLabel(title: "Todas (\(rules.count))", selected: categoryFilter == nil)
+                            }
+                            ForEach(filterCategories) { c in
+                                Button { categoryFilter = c.id } label: {
+                                    ChipLabel(title: c.name, selected: categoryFilter == c.id)
+                                }
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                if rules.isEmpty {
+                    VStack(spacing: 8) {
+                        Image(systemName: "repeat").font(.largeTitle).foregroundStyle(Theme.textSecondary)
+                        Text("Sem recorrentes").font(.headline)
+                        Text("Cria regras para renda, subscrições, ginásio, salário…")
+                            .font(.subheadline).foregroundStyle(Theme.textSecondary).multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .card()
+                } else {
+                    RowsCard {
+                        ForEach(shown) { rule in
+                            row(rule)
+                            if rule.id != shown.last?.id { RowDivider() }
+                        }
+                    }
+                }
+
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: "sparkles").foregroundStyle(Theme.primary).accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Toggle(isOn: $notificationsEnabled) {
+                            Text("Lembretes no dia do pagamento").font(.subheadline.weight(.semibold))
+                        }
+                        Text("Notificação local às 9:00 no dia de cada ocorrência. O iOS não garante execução em segundo plano: as ocorrências em atraso são criadas sempre que abres a app.")
+                            .font(.caption).foregroundStyle(Theme.textSecondary)
+                    }
+                }
+                .card(padding: 16)
+                .onChange(of: notificationsEnabled) { _, on in
+                    Task {
+                        if on { _ = await RecurringService.requestAuthorization() }
+                        RecurringService.rescheduleNotifications(context, enabled: on)
+                    }
+                }
             }
-            if rules.isEmpty {
-                ContentUnavailableView("Sem recorrentes", systemImage: "repeat",
-                                       description: Text("Cria regras para renda, subscrições, salário…"))
-            }
-            ForEach(rules) { rule in
-                Button { editing = rule } label: { row(rule) }
-                    .buttonStyle(.plain)
-            }
-            .onDelete { idx in
-                for i in idx { context.delete(rules[i]) }
-                try? context.save()
-                RecurringService.rescheduleNotifications(context, enabled: notificationsEnabled)
-            }
+            .padding(.horizontal, Theme.margin)
+            .padding(.bottom, 24)
         }
-        .navigationTitle("Recorrentes")
-        .toolbar {
-            Button { creating = true } label: { Image(systemName: "plus") }
-                .accessibilityLabel("Nova regra recorrente")
-        }
+        .screenBackground()
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $editing) { RecurringEditorView(rule: $0) }
         .sheet(isPresented: $creating) { RecurringEditorView(rule: nil) }
     }
 
-    private func row(_ rule: RecurringRule) -> some View {
-        HStack {
-            CategoryIcon(iconName: rule.category?.iconName ?? "repeat", colorHex: rule.category?.colorHex ?? "#30B0C7")
-            VStack(alignment: .leading) {
-                Text(rule.name).foregroundStyle(rule.isActive ? .primary : .secondary)
-                Group {
-                    if let next = RecurrenceEngine.nextOccurrence(rule.schedule, after: max(.now, rule.lastGeneratedDate ?? .distantPast)), rule.isActive {
-                        Text("\(everyText(rule)) · próxima: \(DateFormat.short(next))")
-                    } else {
-                        Text(rule.isActive ? "\(everyText(rule)) · terminada" : "Pausada")
-                    }
-                }
-                .font(.caption).foregroundStyle(.secondary)
-            }
-            Spacer()
-            MoneyText(cents: rule.amountCents, kind: rule.kind)
+    private func nextDate(_ rule: RecurringRule) -> Date? {
+        RecurrenceEngine.nextOccurrence(rule.schedule, after: max(.now, rule.lastGeneratedDate ?? .distantPast))
+    }
+
+    private func uniqueCategories() -> [FinCategory] {
+        var seen = Set<UUID>()
+        var result: [FinCategory] = []
+        for r in rules {
+            if let c = r.category, !seen.contains(c.id) { seen.insert(c.id); result.append(c) }
         }
-        .accessibilityElement(children: .combine)
+        return result
+    }
+
+    private func row(_ rule: RecurringRule) -> some View {
+        HStack(spacing: 12) {
+            Button { editing = rule } label: {
+                HStack(spacing: 12) {
+                    IconTile(systemName: rule.category?.iconName ?? "repeat", colorHex: rule.category?.colorHex, size: 44)
+                    VStack(alignment: .leading, spacing: 3) {
+                        HStack(spacing: 6) {
+                            Text(rule.name).font(.body.weight(.semibold)).lineLimit(1)
+                            Badge(everyText(rule).uppercased(with: PT.locale))
+                        }
+                        Group {
+                            if rule.isActive, let next = nextDate(rule) {
+                                Text("Próximo: ") + Text(DateFormat.rowDate(next)).foregroundColor(Theme.textPrimary)
+                            } else {
+                                Text(rule.isActive ? "Terminada" : "Pausada")
+                            }
+                        }
+                        .font(.subheadline).foregroundStyle(Theme.textSecondary)
+                    }
+                    Spacer(minLength: 4)
+                    MoneyText(cents: rule.amountCents, kind: rule.kind)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            Toggle("Ativa", isOn: Binding(get: { rule.isActive }, set: { on in
+                rule.isActive = on
+                if on, rule.lastGeneratedDate == nil || rule.lastGeneratedDate! < PT.calendar.startOfDay(for: .now) {
+                    // Ao reativar, não gera retroativamente o período em pausa.
+                    rule.lastGeneratedDate = PT.calendar.startOfDay(for: .now).addingTimeInterval(-1)
+                }
+                try? context.save()
+                RecurringService.rescheduleNotifications(context, enabled: notificationsEnabled)
+            }))
+            .labelsHidden()
+            .tint(Theme.primary)
+            .accessibilityLabel("\(rule.name) ativa")
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .contextMenu {
+            Button(role: .destructive) {
+                context.delete(rule)
+                try? context.save()
+                RecurringService.rescheduleNotifications(context, enabled: notificationsEnabled)
+            } label: { Label("Eliminar", systemImage: "trash") }
+        }
     }
 
     private func everyText(_ rule: RecurringRule) -> String {
@@ -124,6 +232,18 @@ struct RecurringEditorView: View {
                     Toggle("Ativa", isOn: $isActive)
                     Toggle("Notificar no dia", isOn: $notify)
                 }
+                if let rule {
+                    Section {
+                        Button("Eliminar regra", role: .destructive) {
+                            context.delete(rule)
+                            try? context.save()
+                            RecurringService.rescheduleNotifications(context, enabled: notificationsEnabled)
+                            dismiss()
+                        }
+                    } footer: {
+                        Text("As transações já criadas por esta regra mantêm-se no histórico.")
+                    }
+                }
             }
             .navigationTitle(rule == nil ? "Nova recorrente" : "Editar recorrente")
             .navigationBarTitleDisplayMode(.inline)
@@ -135,7 +255,10 @@ struct RecurringEditorView: View {
                 }
             }
             .onAppear(perform: load)
+            .scrollContentBackground(.hidden)
+            .background(Theme.background.ignoresSafeArea())
         }
+        .tint(Theme.primary)
     }
 
     private func load() {

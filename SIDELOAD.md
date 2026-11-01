@@ -1,4 +1,4 @@
-# Instalar o Orçamento no iPhone a partir do Windows (Sideloadly)
+# Instalar o Budget do Fábio no iPhone a partir do Windows (Sideloadly)
 
 Este guia explica, passo a passo, como instalar o ficheiro `.ipa` gerado pelo GitHub Actions num iPhone, usando um computador Windows e um Apple ID gratuito.
 
@@ -40,7 +40,7 @@ A partir do iOS 16 é obrigatório para correr apps instaladas por sideload.
 3. Arrasta o `Orcamento.ipa` para a janela (ou clica no ícone do IPA e escolhe o ficheiro).
 4. Em **Apple account**, escreve o teu Apple ID. Recomenda-se um Apple ID secundário só para isto.
 5. Abre **Advanced options** e confirma que:
-   - **Bundle ID**: fica `pt.fabio.orcamento`. Não deixes o Sideloadly alterá-lo, porque é deste valor que depende manteres os dados (ver passo 6).
+   - **Bundle ID**: fica `pt.fabio.orcamento`. Este é o identificador interno; o nome que aparece no ecrã é "Budget do Fábio". Não deixes o Sideloadly alterá-lo, porque é deste valor que depende manteres os dados (ver passo 6).
    - Não estão ativadas opções que acrescentem *app extensions* ou *entitlements* extra.
 6. Clica em **Start** e introduz a palavra-passe do Apple ID quando for pedida (e o código de dois fatores, se aparecer).
 7. Espera pela mensagem **Done**.
@@ -54,7 +54,7 @@ Na primeira instalação o iOS não deixa abrir a app até confiares no certific
 1. No iPhone: **Definições → Geral → VPN e gestão de dispositivos**.
 2. Em **App de programador**, toca no teu Apple ID.
 3. Toca em **Confiar em "<o teu Apple ID>"** e confirma.
-4. Abre a app **Orçamento**.
+4. Abre a app **Budget do Fábio** (ícone azul com o símbolo do euro).
 
 ## 6. Renovar de 7 em 7 dias sem perder dados
 

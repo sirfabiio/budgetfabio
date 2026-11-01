@@ -56,6 +56,8 @@ struct ImportExportView: View {
                 Text("Inclui categorias, transações, objetivos, recorrentes, grupos, regras de comerciantes e definições. Restaurar substitui todos os dados atuais.")
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Theme.background.ignoresSafeArea())
         .navigationTitle("Importar e exportar")
         .sheet(item: $share) { ActivityView(items: [$0.url]) }
         .fileImporter(isPresented: Binding(get: { importing != nil }, set: { if !$0 { importing = nil } }),
@@ -118,25 +120,12 @@ struct ImportExportView: View {
     }
 
     private func exportPDF() {
-        let snaps = transactions.map(\.snapshot)
-        let interval = BalanceCalculator.monthInterval(containing: reportMonth)
-        let monthTx = transactions.filter { $0.date >= interval.start && $0.date < interval.end }
-        let balances = BalanceCalculator.balances(snaps, opening: openingBalance, upTo: interval.end.addingTimeInterval(-1))
-        let byCat = BalanceCalculator.expensesByCategory(snaps, from: interval.start, to: interval.end).map { item in
-            (name: categories.first { $0.id == item.categoryID }?.name ?? "Sem categoria", total: item.total)
+        if let url = MonthlyReportBuilder.makePDF(transactions: transactions, categories: categories,
+                                                  opening: openingBalance, month: reportMonth) {
+            share = ShareFile(url: url)
+        } else {
+            message = "Não foi possível criar o PDF."
         }
-        let data = MonthlyReportData(
-            month: interval.start,
-            flow: BalanceCalculator.cashFlow(snaps, from: interval.start, to: interval.end),
-            checking: balances.checking,
-            vault: balances.vault,
-            byCategory: byCat,
-            lines: monthTx.map { MonthlyReportData.Line(date: $0.date, title: $0.title, category: $0.category?.name ?? $0.kind.label, amountCents: $0.amountCents, kind: $0.kind) }
-        )
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM"
-        if let url = writeTemp(PDFReport.render(data), name: "relatorio-\(f.string(from: interval.start)).pdf") { share = ShareFile(url: url) }
     }
 
     private func exportBackup() {

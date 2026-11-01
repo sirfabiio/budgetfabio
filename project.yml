@@ -21,7 +21,7 @@ targets:
     info:
       path: App/Info.plist
       properties:
-        CFBundleDisplayName: Orçamento
+        CFBundleDisplayName: Budget do Fábio
         CFBundleDevelopmentRegion: pt-PT
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
@@ -36,6 +36,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: pt.fabio.orcamento
         PRODUCT_NAME: Orcamento
         ENABLE_PREVIEWS: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
   OrcamentoTests:
     type: bundle.unit-test
     platform: iOS

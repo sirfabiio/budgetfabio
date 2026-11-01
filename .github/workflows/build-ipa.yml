@@ -77,6 +77,13 @@ jobs:
           echo "MinimumOSVersion=$MIN"
           test "$MIN" = "17.0"
           echo "CFBundleIdentifier=$(plutil -extract CFBundleIdentifier raw "$PLIST")"
+          NAME=$(plutil -extract CFBundleDisplayName raw "$PLIST")
+          echo "CFBundleDisplayName=$NAME"
+          test "$NAME" = "Budget do Fábio"
+          # Ícone da app compilado no asset catalog.
+          plutil -extract CFBundleIcons.CFBundlePrimaryIcon.CFBundleIconName raw "$PLIST"
+          test -f "Payload/$APP_NAME.app/Assets.car"
+          ls Payload/$APP_NAME.app/ | grep -i appicon || true
           # Nenhum ficheiro de entitlements embutido (app não assinada).
           if find "Payload/$APP_NAME.app" -name '*.entitlements' -o -name '*.xcent' | grep -q .; then
             echo "Encontrado ficheiro de entitlements inesperado"; exit 1

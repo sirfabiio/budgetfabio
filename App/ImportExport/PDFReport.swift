@@ -48,7 +48,7 @@ enum PDFReport {
             newPage()
             draw("Relatório mensal — \(DateFormat.month(data.month))", font: titleFont, x: margin, width: contentWidth)
             y += 30
-            draw("Gerado em \(DateFormat.short(.now)) · Orçamento (dados locais)", font: bodyFont, x: margin, width: contentWidth, color: .darkGray)
+            draw("Gerado em \(DateFormat.short(.now)) · Budget do Fábio (dados locais)", font: bodyFont, x: margin, width: contentWidth, color: .darkGray)
             y += 24
 
             draw("Resumo", font: headFont, x: margin, width: contentWidth)
@@ -101,6 +101,41 @@ enum PDFReport {
                      color: line.kind == .income ? UIColor.systemGreen : .black)
                 y += 14
             }
+        }
+    }
+}
+
+/// Constrói o relatório mensal a partir dos modelos e grava-o num ficheiro temporário.
+@MainActor
+enum MonthlyReportBuilder {
+    static func makeData(transactions: [FinTransaction], categories: [FinCategory], opening: Cents, month: Date) -> MonthlyReportData {
+        let snaps = transactions.map(\.snapshot)
+        let interval = BalanceCalculator.monthInterval(containing: month)
+        let monthTx = transactions.filter { $0.date >= interval.start && $0.date < interval.end }.sorted { $0.date < $1.date }
+        let balances = BalanceCalculator.balances(snaps, opening: opening, upTo: interval.end.addingTimeInterval(-1))
+        let byCat = BalanceCalculator.expensesByCategory(snaps, from: interval.start, to: interval.end).map { item in
+            (name: categories.first { $0.id == item.categoryID }?.name ?? "Sem categoria", total: item.total)
+        }
+        let lines = monthTx.map {
+            MonthlyReportData.Line(date: $0.date, title: $0.title, category: $0.category?.name ?? $0.kind.label,
+                                   amountCents: $0.amountCents, kind: $0.kind)
+        }
+        return MonthlyReportData(month: interval.start,
+                                 flow: BalanceCalculator.cashFlow(snaps, from: interval.start, to: interval.end),
+                                 checking: balances.checking, vault: balances.vault, byCategory: byCat, lines: lines)
+    }
+
+    static func makePDF(transactions: [FinTransaction], categories: [FinCategory], opening: Cents, month: Date) -> URL? {
+        let data = makeData(transactions: transactions, categories: categories, opening: opening, month: month)
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "yyyy-MM"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("relatorio-\(f.string(from: data.month)).pdf")
+        do {
+            try PDFReport.render(data).write(to: url, options: .atomic)
+            return url
+        } catch {
+            return nil
         }
     }
 }

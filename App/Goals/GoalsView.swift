@@ -1,8 +1,8 @@
 import SwiftUI
 import SwiftData
 
-/// Secção de objetivos usada no ecrã do Cofre e no ecrã dedicado.
-struct GoalsSection: View {
+/// Lista de objetivos (usada no Cofre e no ecrã dedicado).
+struct GoalsList: View {
     let goals: [Goal]
     let vault: Cents
     @State private var editing: Goal?
@@ -10,30 +10,38 @@ struct GoalsSection: View {
     @State private var allocating: Goal?
 
     var body: some View {
-        Section {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Text("Objetivos de Poupança").font(.title3.weight(.semibold))
+                    .accessibilityAddTraits(.isHeader)
+                if !goals.isEmpty { Badge("\(goals.count)") }
+                Spacer()
+                Button { creating = true } label: { Label("Novo objetivo", systemImage: "plus") }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.primary)
+            }
+            .padding(.top, 8)
+
             if goals.isEmpty {
-                Text("Cria objetivos (ex.: peças para a KTM, viagem) e afeta-lhes parte do cofre.")
-                    .font(.callout).foregroundStyle(.secondary)
+                Text("Cria objetivos (ex.: peças para a KTM, viagem de verão) e afeta-lhes parte do cofre.")
+                    .font(.subheadline).foregroundStyle(Theme.textSecondary)
+                    .card()
             }
             ForEach(goals) { g in
-                GoalRow(goal: g)
-                    .contentShape(Rectangle())
-                    .onTapGesture { allocating = g }
-                    .swipeActions {
+                Button { allocating = g } label: { GoalCard(goal: g) }
+                    .buttonStyle(.plain)
+                    .contextMenu {
+                        Button { allocating = g } label: { Label("Afetar ou libertar", systemImage: "arrow.left.arrow.right") }
                         Button { editing = g } label: { Label("Editar", systemImage: "pencil") }
                     }
                     .accessibilityAction(named: "Editar") { editing = g }
-                    .accessibilityAddTraits(.isButton)
+                    .accessibilityHint("Afetar ou libertar dinheiro do cofre")
             }
-            // As folhas ficam numa única linha para não serem replicadas por cada linha da secção.
-            Button { creating = true } label: { Label("Novo objetivo", systemImage: "plus") }
-                .sheet(item: $editing) { GoalEditorView(goal: $0) }
-                .sheet(isPresented: $creating) { GoalEditorView(goal: nil) }
-                .sheet(item: $allocating) { g in
-                    GoalAllocationView(goal: g, vault: vault, allocations: goals.map(\.allocatedCents))
-                }
-        } header: {
-            Text("Objetivos")
+        }
+        .sheet(item: $editing) { GoalEditorView(goal: $0) }
+        .sheet(isPresented: $creating) { GoalEditorView(goal: nil) }
+        .sheet(item: $allocating) { g in
+            GoalAllocationView(goal: g, vault: vault, allocations: goals.map(\.allocatedCents))
         }
     }
 }
@@ -45,45 +53,72 @@ struct GoalsView: View {
 
     var body: some View {
         let vault = BalanceCalculator.balances(transactions.map(\.snapshot), opening: openingBalance).vault
-        List {
-            Section {
-                LabeledContent("Saldo do cofre", value: MoneyFormat.string(vault))
-                LabeledContent("Livre", value: MoneyFormat.string(VaultCalculator.free(vault: vault, allocations: goals.map(\.allocatedCents))))
+        let free = VaultCalculator.free(vault: vault, allocations: goals.map(\.allocatedCents))
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                ScreenHeader(eyebrow: "Cofre", title: "Objetivos")
+                HStack(spacing: 0) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Eyebrow("Saldo do cofre")
+                        Text(MoneyFormat.string(vault)).font(.title3.weight(.bold).monospacedDigit())
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    Rectangle().fill(Theme.outline).frame(width: 1, height: 40)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Eyebrow("Por alocar")
+                        Text(MoneyFormat.string(free)).font(.title3.weight(.bold).monospacedDigit()).foregroundStyle(Theme.primary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 16)
+                }
+                .card()
+                .accessibilityElement(children: .combine)
+                GoalsList(goals: goals, vault: vault)
             }
-            GoalsSection(goals: goals, vault: vault)
+            .padding(.horizontal, Theme.margin)
+            .padding(.bottom, 24)
         }
-        .navigationTitle("Objetivos")
+        .screenBackground()
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-struct GoalRow: View {
+struct GoalCard: View {
     let goal: Goal
 
     var body: some View {
         let fraction = goal.targetCents > 0 ? min(1, Double(goal.allocatedCents) / Double(goal.targetCents)) : 0
         let percent = goal.targetCents > 0 ? goal.allocatedCents * 100 / goal.targetCents : 0
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                CategoryIcon(iconName: goal.iconName, colorHex: goal.colorHex, size: 28)
-                Text(goal.name).font(.headline)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 14) {
+                IconTile(systemName: goal.iconName, colorHex: goal.colorHex, size: 48)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(goal.name).font(.headline).foregroundStyle(Theme.textPrimary)
+                    if let d = goal.deadline {
+                        Label("Até \(DateFormat.month(d))", systemImage: "calendar")
+                            .font(.subheadline).foregroundStyle(Theme.textSecondary)
+                    } else {
+                        Text("Sem prazo").font(.subheadline).foregroundStyle(Theme.textSecondary)
+                    }
+                }
                 Spacer()
-                Text("\(percent)%").monospacedDigit().foregroundStyle(.secondary)
+                Badge("\(percent)%", style: percent >= 100 ? .positive : .primary)
             }
-            ProgressView(value: fraction).tint(Color(hex: goal.colorHex))
+            ThinProgress(fraction: fraction, color: percent >= 100 ? Theme.positive : Theme.primary, height: 8)
             HStack {
-                Text("\(MoneyFormat.string(goal.allocatedCents)) de \(MoneyFormat.string(goal.targetCents))")
+                Text(MoneyFormat.string(goal.allocatedCents)).foregroundStyle(Theme.textPrimary)
                 Spacer()
-                if let d = goal.deadline { Text("até \(DateFormat.short(d))") }
+                Text("de \(MoneyFormat.string(goal.targetCents))").foregroundStyle(Theme.textSecondary)
             }
-            .font(.caption).foregroundStyle(.secondary)
+            .font(.subheadline.monospacedDigit())
         }
-        .padding(.vertical, 4)
+        .card()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Objetivo \(goal.name): \(MoneyFormat.string(goal.allocatedCents)) de \(MoneyFormat.string(goal.targetCents)), \(percent) por cento.")
     }
 }
 
-private struct GoalAllocationView: View {
+struct GoalAllocationView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     let goal: Goal
@@ -99,36 +134,40 @@ private struct GoalAllocationView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Form {
-                GoalRow(goal: goal)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                SheetHeader(eyebrow: "Objetivo", title: goal.name) { dismiss() }
+                GoalCard(goal: goal)
                 Picker("Operação", selection: $adding) {
                     Text("Afetar").tag(true)
                     Text("Libertar").tag(false)
                 }
                 .pickerStyle(.segmented)
-                AmountField(title: "Valor", cents: $amount)
-                LabeledContent("Livre no cofre", value: MoneyFormat.string(VaultCalculator.free(vault: vault, allocations: allocations)))
+                StyledField(systemImage: "eurosign") { AmountField(title: "Valor", cents: $amount) }
+                HStack {
+                    Text("Livre no cofre").foregroundStyle(Theme.textSecondary)
+                    Spacer()
+                    Text(MoneyFormat.string(VaultCalculator.free(vault: vault, allocations: allocations))).monospacedDigit()
+                }
+                .font(.subheadline)
                 if let error {
-                    Label(error.message, systemImage: "exclamationmark.triangle").foregroundStyle(.red)
+                    Label(error.message, systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(Theme.danger)
                 }
-            }
-            .navigationTitle(goal.name)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancelar") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Confirmar") {
-                        guard let amount else { return }
-                        goal.allocatedCents += adding ? amount : -amount
-                        try? context.save()
-                        dismiss()
-                    }
-                    .disabled((amount ?? 0) <= 0 || error != nil)
+                Button("Confirmar") {
+                    guard let amount else { return }
+                    goal.allocatedCents += adding ? amount : -amount
+                    try? context.save()
+                    dismiss()
                 }
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled((amount ?? 0) <= 0 || error != nil)
             }
+            .padding(Theme.margin)
+            .padding(.top, 8)
         }
+        .background(Theme.background.ignoresSafeArea())
         .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
     }
 }
 
@@ -146,58 +185,55 @@ struct GoalEditorView: View {
     @State private var loaded = false
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    HStack {
-                        CategoryIcon(iconName: iconName, colorHex: colorHex, size: 36)
-                        TextField("Nome do objetivo", text: $name)
-                    }
-                    AmountField(title: "Valor alvo", cents: $target)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                SheetHeader(eyebrow: "Objetivo", title: goal == nil ? "Novo objetivo" : "Editar objetivo") { dismiss() }
+                IconColorPicker(iconName: $iconName, colorHex: $colorHex)
+                VStack(alignment: .leading, spacing: 8) {
+                    Eyebrow("Nome do objetivo")
+                    StyledField(systemImage: "target") { TextField("Ex.: Peças para a KTM", text: $name) }
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    Eyebrow("Valor alvo")
+                    StyledField(systemImage: "eurosign") { AmountField(title: "", cents: $target) }
+                }
+                StyledField(systemImage: "calendar") {
                     Toggle("Data limite", isOn: $hasDeadline)
-                    if hasDeadline { DatePicker("Até", selection: $deadline, displayedComponents: .date) }
                 }
-                Section("Aspeto") {
-                    Picker("Cor", selection: $colorHex) {
-                        ForEach(Palette.colors, id: \.self) { hex in
-                            Label(hex, systemImage: "circle.fill").tint(Color(hex: hex)).foregroundStyle(Color(hex: hex)).tag(hex)
-                        }
-                    }
-                    Picker("Ícone", selection: $iconName) {
-                        ForEach(Palette.icons, id: \.self) { Label($0, systemImage: $0).tag($0) }
-                    }
+                if hasDeadline {
+                    DatePicker("Até", selection: $deadline, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .card(padding: 8)
                 }
+                Button("Guardar", action: save)
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || (target ?? 0) <= 0)
                 if goal != nil {
-                    Section {
-                        Button("Eliminar objetivo", role: .destructive) { confirmDelete = true }
-                    } footer: {
-                        Text("O valor afeto volta a ficar livre no cofre.")
-                    }
+                    Button("Eliminar objetivo", role: .destructive) { confirmDelete = true }
+                        .foregroundStyle(Theme.danger)
+                        .frame(maxWidth: .infinity)
+                    Text("O valor afeto volta a ficar livre no cofre.").font(.caption).foregroundStyle(Theme.textSecondary)
+                        .frame(maxWidth: .infinity)
                 }
             }
-            .navigationTitle(goal == nil ? "Novo objetivo" : "Editar objetivo")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancelar") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Guardar", action: save)
-                        .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || (target ?? 0) <= 0)
-                }
+            .padding(Theme.margin)
+            .padding(.top, 8)
+        }
+        .background(Theme.background.ignoresSafeArea())
+        .presentationDragIndicator(.visible)
+        .confirmationDialog("Eliminar este objetivo?", isPresented: $confirmDelete, titleVisibility: .visible) {
+            Button("Eliminar", role: .destructive) {
+                if let goal { context.delete(goal) }
+                try? context.save()
+                dismiss()
             }
-            .confirmationDialog("Eliminar este objetivo?", isPresented: $confirmDelete, titleVisibility: .visible) {
-                Button("Eliminar", role: .destructive) {
-                    if let goal { context.delete(goal) }
-                    try? context.save()
-                    dismiss()
-                }
-            }
-            .onAppear {
-                guard !loaded else { return }
-                loaded = true
-                if let g = goal {
-                    name = g.name; target = g.targetCents; hasDeadline = g.deadline != nil
-                    deadline = g.deadline ?? .now; colorHex = g.colorHex; iconName = g.iconName
-                }
+        }
+        .onAppear {
+            guard !loaded else { return }
+            loaded = true
+            if let g = goal {
+                name = g.name; target = g.targetCents; hasDeadline = g.deadline != nil
+                deadline = g.deadline ?? .now; colorHex = g.colorHex; iconName = g.iconName
             }
         }
     }
@@ -213,5 +249,58 @@ struct GoalEditorView: View {
         g.iconName = iconName
         try? context.save()
         dismiss()
+    }
+}
+
+/// Escolha de ícone e cor (partilhada por categorias e objetivos).
+struct IconColorPicker: View {
+    @Binding var iconName: String
+    @Binding var colorHex: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 16) {
+                IconTile(systemName: iconName, colorHex: colorHex, size: 64)
+                    .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(Theme.primary, lineWidth: 2))
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Cor").font(.subheadline).foregroundStyle(Theme.textSecondary)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            ForEach(Palette.colors, id: \.self) { hex in
+                                Button { colorHex = hex } label: {
+                                    Circle().fill(Color(hex: hex))
+                                        .frame(width: 30, height: 30)
+                                        .overlay {
+                                            if hex == colorHex {
+                                                Image(systemName: "checkmark").font(.caption.bold()).foregroundStyle(.white)
+                                            }
+                                        }
+                                }
+                                .accessibilityLabel("Cor \(hex)")
+                                .accessibilityAddTraits(hex == colorHex ? .isSelected : [])
+                            }
+                        }
+                        .padding(.vertical, 2)
+                    }
+                }
+            }
+            Text("Escolher ícone").font(.subheadline).foregroundStyle(Theme.textSecondary)
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 44), spacing: 8)], spacing: 8) {
+                ForEach(Palette.icons, id: \.self) { icon in
+                    Button { iconName = icon } label: {
+                        Image(systemName: icon)
+                            .font(.body)
+                            .foregroundStyle(icon == iconName ? Color(hex: colorHex) : Theme.textPrimary)
+                            .frame(width: 44, height: 44)
+                            .background(icon == iconName ? Color(hex: colorHex).opacity(0.15) : Theme.card, in: Circle())
+                            .overlay(Circle().stroke(icon == iconName ? Color(hex: colorHex) : Theme.outline, lineWidth: 1))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(icon)
+                    .accessibilityAddTraits(icon == iconName ? .isSelected : [])
+                }
+            }
+        }
+        .card(padding: 16, background: Theme.cardMuted)
     }
 }

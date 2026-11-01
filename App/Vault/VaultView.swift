@@ -2,80 +2,97 @@ import SwiftUI
 import SwiftData
 
 struct VaultView: View {
-    @Environment(\.modelContext) private var context
     @Query(sort: \FinTransaction.date, order: .reverse) private var transactions: [FinTransaction]
     @Query(sort: \Goal.createdAt) private var goals: [Goal]
     @AppStorage(SettingsKeys.openingBalance) private var openingBalance: Int = 0
     @State private var transfer: TransactionKind?
     @State private var editingTransfer: FinTransaction?
+    @State private var choosingGoal = false
+    @State private var allocating: Goal?
 
     var body: some View {
         let balances = BalanceCalculator.balances(transactions.map(\.snapshot), opening: openingBalance)
         let allocated = goals.map(\.allocatedCents)
         let free = VaultCalculator.free(vault: balances.vault, allocations: allocated)
-        let movements = transactions.filter { $0.kind.isTransfer }
+        let movements = Array(transactions.filter { $0.kind.isTransfer }.prefix(30))
 
-        List {
-            Section {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Saldo do cofre").font(.subheadline).foregroundStyle(.secondary)
-                    Text(MoneyFormat.string(balances.vault)).font(.largeTitle.bold().monospacedDigit())
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                ScreenHeader(title: "Cofre") {
+                    Badge("Separado do saldo", style: .neutral, systemImage: "lock.fill")
+                }
+
+                VStack(alignment: .leading, spacing: 16) {
                     HStack {
-                        Label("Afeto a objetivos: \(MoneyFormat.string(allocated.reduce(0, +)))", systemImage: "target")
+                        Eyebrow("Total acumulado em poupança")
                         Spacer()
+                        Badge("Protegido", style: .primary, systemImage: "shield")
                     }
-                    .font(.caption).foregroundStyle(.secondary)
-                    Label("Livre: \(MoneyFormat.string(free))", systemImage: "lock.open")
-                        .font(.caption).foregroundStyle(.secondary)
-                }
-                .accessibilityElement(children: .combine)
-                HStack {
-                    Button { transfer = .vaultDeposit } label: {
-                        Label("Guardar", systemImage: "arrow.down.to.line")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    Button { transfer = .vaultWithdrawal } label: {
-                        Label("Levantar", systemImage: "arrow.up.to.line")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-                }
-                .listRowBackground(Color.clear)
-            } footer: {
-                Text("As transferências entre o saldo à ordem (\(MoneyFormat.string(balances.checking))) e o cofre não contam como despesa nem receita.")
-            }
-
-            GoalsSection(goals: goals, vault: balances.vault)
-
-            Section("Movimentos do cofre") {
-                if movements.isEmpty {
-                    Text("Ainda sem movimentos.").foregroundStyle(.secondary)
-                }
-                ForEach(movements.prefix(50)) { t in
-                    Button { editingTransfer = t } label: {
-                        HStack {
-                            Image(systemName: t.kind == .vaultDeposit ? "arrow.down.to.line" : "arrow.up.to.line")
-                                .foregroundStyle(.blue)
-                                .accessibilityHidden(true)
-                            VStack(alignment: .leading) {
-                                Text(t.kind == .vaultDeposit ? "Guardado no cofre" : "Levantado do cofre")
-                                Text(DateFormat.short(t.date)).font(.caption).foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                            Text(MoneyFormat.string(t.amountCents)).monospacedDigit()
+                    HeroAmount(cents: balances.vault)
+                    Label("Saldo à ordem: \(MoneyFormat.string(balances.checking))", systemImage: "wallet.pass")
+                        .font(.subheadline).foregroundStyle(Theme.textSecondary)
+                    Rectangle().fill(Theme.outline).frame(height: 1)
+                    HStack(spacing: 12) {
+                        Button { transfer = .vaultDeposit } label: {
+                            Label("Depositar", systemImage: "arrow.down")
                         }
-                        .accessibilityElement(children: .combine)
+                        .buttonStyle(PrimaryButtonStyle())
+                        Button { transfer = .vaultWithdrawal } label: {
+                            Label("Levantar", systemImage: "arrow.up")
+                        }
+                        .buttonStyle(OutlineButtonStyle())
                     }
-                    .buttonStyle(.plain)
+                }
+                .card(padding: 24)
+
+                HStack(spacing: 14) {
+                    IconTile(systemName: "wallet.pass", size: 44)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Disponível no cofre").font(.subheadline).foregroundStyle(Theme.textSecondary)
+                        Text("Por alocar: \(MoneyFormat.string(free))").font(.headline.monospacedDigit())
+                    }
+                    Spacer()
+                    Button("Alocar") { choosingGoal = true }
+                        .buttonStyle(PillButtonStyle())
+                        .disabled(free <= 0)
+                }
+                .card(padding: 16)
+                .accessibilityElement(children: .contain)
+
+                GoalsList(goals: goals, vault: balances.vault)
+
+                SectionTitle("Movimentos do cofre")
+                if movements.isEmpty {
+                    Text("Ainda sem movimentos. As transferências não contam como despesa nem receita.")
+                        .font(.subheadline).foregroundStyle(Theme.textSecondary)
+                        .card()
+                } else {
+                    RowsCard {
+                        ForEach(movements) { t in
+                            Button { editingTransfer = t } label: { TransactionRow(transaction: t) }
+                                .buttonStyle(.plain)
+                            if t.id != movements.last?.id { RowDivider() }
+                        }
+                    }
                 }
             }
+            .padding(.horizontal, Theme.margin)
+            .padding(.bottom, 24)
         }
-        .navigationTitle("Cofre")
+        .screenBackground()
+        .toolbar(.hidden, for: .navigationBar)
         .sheet(item: $transfer) { kind in
             VaultTransferView(kind: kind, checking: balances.checking, vault: balances.vault, allocations: allocated)
         }
         .sheet(item: $editingTransfer) { TransactionEditorView(transaction: $0) }
+        .sheet(item: $allocating) { g in
+            GoalAllocationView(goal: g, vault: balances.vault, allocations: allocated)
+        }
+        .confirmationDialog("Alocar a que objetivo?", isPresented: $choosingGoal, titleVisibility: .visible) {
+            ForEach(goals) { g in Button(g.name) { allocating = g } }
+        } message: {
+            Text(goals.isEmpty ? "Cria primeiro um objetivo." : "Livre no cofre: \(MoneyFormat.string(free))")
+        }
     }
 }
 
@@ -98,30 +115,37 @@ private struct VaultTransferView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Form {
-                AmountField(title: "Valor", cents: $amount)
-                DatePicker("Data", selection: $date)
-                TextField("Nota (opcional)", text: $note)
-                if let error {
-                    Label(error.message, systemImage: "exclamationmark.triangle").foregroundStyle(.red)
-                }
+        VStack(alignment: .leading, spacing: 16) {
+            SheetHeader(eyebrow: "Cofre", title: kind == .vaultDeposit ? "Depositar no cofre" : "Levantar do cofre") { dismiss() }
+            StyledField(systemImage: "eurosign") { AmountField(title: "Valor", cents: $amount) }
+            StyledField(systemImage: "calendar") {
+                Text("Data").foregroundStyle(Theme.textSecondary)
+                Spacer()
+                DatePicker("Data", selection: $date).labelsHidden()
             }
-            .navigationTitle(kind == .vaultDeposit ? "Guardar no cofre" : "Levantar do cofre")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancelar") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Confirmar") {
-                        guard let amount else { return }
-                        context.insert(FinTransaction(amountCents: amount, kind: kind, date: date, method: .bankTransfer, note: note))
-                        try? context.save()
-                        dismiss()
-                    }
-                    .disabled((amount ?? 0) <= 0 || error != nil)
-                }
+            StyledField(systemImage: "text.alignleft") { TextField("Nota (opcional)", text: $note) }
+            if let error {
+                Label(error.message, systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(Theme.danger)
+            } else {
+                Text(kind == .vaultDeposit
+                     ? "Sai do saldo à ordem (\(MoneyFormat.string(checking))) e não conta como despesa."
+                     : "Volta para o saldo à ordem e não conta como receita.")
+                    .font(.footnote).foregroundStyle(Theme.textSecondary)
             }
+            Spacer()
+            Button("Confirmar") {
+                guard let amount else { return }
+                context.insert(FinTransaction(amountCents: amount, kind: kind, date: date, method: .bankTransfer, note: note))
+                try? context.save()
+                dismiss()
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled((amount ?? 0) <= 0 || error != nil)
         }
-        .presentationDetents([.medium])
+        .padding(Theme.margin)
+        .padding(.top, 8)
+        .background(Theme.background.ignoresSafeArea())
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
     }
 }

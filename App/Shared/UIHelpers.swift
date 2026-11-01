@@ -30,12 +30,7 @@ struct CategoryIcon: View {
     var size: CGFloat = 32
 
     var body: some View {
-        Image(systemName: iconName)
-            .font(.system(size: size * 0.45, weight: .semibold))
-            .foregroundStyle(.white)
-            .frame(width: size, height: size)
-            .background(Color(hex: colorHex), in: RoundedRectangle(cornerRadius: size * 0.28, style: .continuous))
-            .accessibilityHidden(true)
+        IconTile(systemName: iconName, colorHex: colorHex, size: size)
     }
 }
 
@@ -77,23 +72,34 @@ struct MoneyText: View {
 
     var body: some View {
         Text(display)
-            .font(.body.monospacedDigit())
+            .font(.body.weight(.semibold).monospacedDigit())
             .foregroundStyle(color)
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
     }
 
     private var display: String {
         switch kind {
-        case .income?: return "+" + MoneyFormat.string(cents)
-        case .expense?: return "−" + MoneyFormat.string(cents)
+        case .income?, .vaultWithdrawal?: return "+ " + MoneyFormat.string(cents)
+        case .expense?, .vaultDeposit?: return "− " + MoneyFormat.string(cents)
         default: return MoneyFormat.string(cents)
         }
     }
 
     private var color: Color {
         switch kind {
-        case .income?: return .green
-        case .vaultDeposit?, .vaultWithdrawal?: return .blue
-        default: return .primary
+        case .income?: return Theme.positive
+        default: return Theme.textPrimary
+        }
+    }
+}
+
+extension BudgetState {
+    var color: Color {
+        switch self {
+        case .normal: return Theme.primary
+        case .nearLimit: return Theme.warning
+        case .exceeded: return Theme.danger
         }
     }
 }
@@ -101,36 +107,20 @@ struct MoneyText: View {
 struct BudgetBar: View {
     var status: BudgetStatus
 
-    var color: Color {
-        switch status.state {
-        case .normal: return .green
-        case .nearLimit: return .orange
-        case .exceeded: return .red
-        }
-    }
-
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            ProgressView(value: min(status.fraction, 1))
-                .tint(color)
+        VStack(alignment: .leading, spacing: 8) {
+            ThinProgress(fraction: status.fraction, color: status.state.color)
             HStack {
                 Text("\(MoneyFormat.string(status.spent)) de \(MoneyFormat.string(status.limit))")
+                    .foregroundStyle(Theme.textSecondary)
                 Spacer()
-                Label(status.state.label, systemImage: icon)
-                    .foregroundStyle(color)
+                Text(status.remaining >= 0 ? "Resta \(MoneyFormat.string(status.remaining))" : "Excedido em \(MoneyFormat.string(-status.remaining))")
+                    .foregroundStyle(status.state == .exceeded ? Theme.danger : Theme.textPrimary)
             }
-            .font(.caption)
+            .font(.caption.monospacedDigit())
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Gasto \(MoneyFormat.string(status.spent)) de \(MoneyFormat.string(status.limit)). \(status.state.label).")
-    }
-
-    private var icon: String {
-        switch status.state {
-        case .normal: return "checkmark.circle"
-        case .nearLimit: return "exclamationmark.triangle"
-        case .exceeded: return "xmark.octagon"
-        }
     }
 }
 
@@ -140,4 +130,5 @@ enum SettingsKeys {
     static let faceIDEnabled = "faceIDEnabled"
     static let notificationsEnabled = "notificationsEnabled"
     static let seeded = "didSeedCategories"
+    static let appearance = "appearanceMode"
 }

@@ -9,41 +9,94 @@ enum SplitConstants {
 struct SplitGroupsView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \SplitGroup.createdAt, order: .reverse) private var groups: [SplitGroup]
+    @Query private var expenses: [SplitExpense]
     @State private var creating = false
+    @State private var deleting: SplitGroup?
 
     var body: some View {
-        List {
-            if groups.isEmpty {
-                ContentUnavailableView("Sem grupos", systemImage: "person.3",
-                                       description: Text("Cria um grupo para um jantar, uma viagem ou a casa partilhada."))
-            }
-            ForEach(groups) { g in
-                NavigationLink { SplitGroupDetailView(group: g) } label: {
-                    VStack(alignment: .leading) {
-                        Text(g.name)
-                        Text(g.participants.joined(separator: ", ")).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                ScreenHeader(eyebrow: "Divisão de despesas", title: "Grupos") {
+                    Button { creating = true } label: { Label("Novo", systemImage: "plus") }
+                        .buttonStyle(PillButtonStyle(filled: true))
+                }
+                if groups.isEmpty {
+                    VStack(spacing: 8) {
+                        Image(systemName: "person.3").font(.largeTitle).foregroundStyle(Theme.textSecondary)
+                        Text("Sem grupos").font(.headline)
+                        Text("Cria um grupo para um jantar, uma viagem ou a casa partilhada.")
+                            .font(.subheadline).foregroundStyle(Theme.textSecondary).multilineTextAlignment(.center)
                     }
+                    .frame(maxWidth: .infinity)
+                    .card()
+                }
+                ForEach(groups) { g in
+                    let records = expenses.filter { $0.groupID == g.id }.map(\.record)
+                    let net = SplitCalculator.netBalances(records, participants: g.participants)
+                    let mine = net[SplitConstants.me] ?? 0
+                    NavigationLink { SplitGroupDetailView(group: g) } label: {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Text(g.name).font(.headline)
+                                Spacer()
+                                Image(systemName: "chevron.right").foregroundStyle(Theme.textSecondary)
+                            }
+                            HStack {
+                                AvatarStack(names: g.participants)
+                                Spacer()
+                                Text(mine == 0 ? "Saldado" : (mine > 0 ? "Recebes \(MoneyFormat.string(mine))" : "Deves \(MoneyFormat.string(-mine))"))
+                                    .font(.subheadline.weight(.semibold).monospacedDigit())
+                                    .foregroundStyle(mine == 0 ? Theme.textSecondary : (mine > 0 ? Theme.primary : Theme.danger))
+                            }
+                        }
+                        .card()
+                    }
+                    .buttonStyle(.plain)
+                    .contextMenu {
+                        Button(role: .destructive) { deleting = g } label: { Label("Eliminar grupo", systemImage: "trash") }
+                    }
+                    .accessibilityAction(named: "Eliminar grupo") { deleting = g }
                 }
             }
-            .onDelete { idx in
-                for i in idx { delete(groups[i]) }
-            }
+            .padding(.horizontal, Theme.margin)
+            .padding(.bottom, 24)
         }
-        .navigationTitle("Divisão de despesas")
-        .toolbar {
-            Button { creating = true } label: { Image(systemName: "plus") }
-                .accessibilityLabel("Novo grupo")
-        }
+        .screenBackground()
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $creating) { SplitGroupEditorView(group: nil) }
+        .confirmationDialog("Eliminar este grupo?", isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }),
+                            titleVisibility: .visible, presenting: deleting) { g in
+            Button("Eliminar \(g.name)", role: .destructive) { delete(g) }
+        } message: { _ in
+            Text("As despesas pessoais já registadas mantêm-se no histórico.")
+        }
     }
 
     private func delete(_ g: SplitGroup) {
         let gid = g.id
         let expenses = (try? context.fetch(FetchDescriptor<SplitExpense>(predicate: #Predicate { $0.groupID == gid }))) ?? []
         for e in expenses { context.delete(e) }
-        // As despesas pessoais já registadas mantêm-se no histórico.
         context.delete(g)
         try? context.save()
+    }
+}
+
+struct AvatarStack: View {
+    var names: [String]
+    var size: CGFloat = 36
+
+    var body: some View {
+        HStack(spacing: -size * 0.3) {
+            ForEach(Array(names.prefix(5).enumerated()), id: \.offset) { _, n in
+                InitialsAvatar(name: n, highlighted: n == SplitConstants.me, size: size)
+            }
+            if names.count > 5 {
+                Text("+\(names.count - 5)").font(.caption.weight(.semibold))
+                    .frame(width: size, height: size).background(Theme.tile, in: Circle())
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Participantes: \(names.joined(separator: ", "))")
     }
 }
 
@@ -77,6 +130,8 @@ struct SplitGroupEditorView: View {
                     Button { others.append("") } label: { Label("Adicionar pessoa", systemImage: "person.badge.plus") }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(Theme.background.ignoresSafeArea())
             .navigationTitle(group == nil ? "Novo grupo" : "Editar grupo")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -129,70 +184,153 @@ struct SplitGroupDetailView: View {
         let net = SplitCalculator.netBalances(expenses.map(\.record), participants: group.participants)
         let transfers = DebtSimplifier.simplify(net)
         let total = expenses.filter { !$0.isSettlement }.reduce(0) { $0 + $1.amountCents }
+        let owedToMe = transfers.filter { $0.to == SplitConstants.me }
+        let iOwe = transfers.filter { $0.from == SplitConstants.me }
+        let mine = net[SplitConstants.me] ?? 0
+        let maxAbs = max(1, net.values.map { abs($0) }.max() ?? 1)
 
-        List {
-            Section {
-                LabeledContent("Total do grupo", value: MoneyFormat.string(total))
-                LabeledContent("A minha parte", value: MoneyFormat.string(expenses.filter { !$0.isSettlement }.reduce(0) { $0 + ($1.shares[SplitConstants.me] ?? 0) }))
-            }
-            Section("Saldo por pessoa") {
-                ForEach(group.participants, id: \.self) { p in
-                    let v = net[p] ?? 0
-                    HStack {
-                        Text(p)
-                        Spacer()
-                        Text(v == 0 ? "Saldado" : (v > 0 ? "Recebe \(MoneyFormat.string(v))" : "Deve \(MoneyFormat.string(-v))"))
-                            .foregroundStyle(v == 0 ? Color.secondary : (v > 0 ? Color.green : Color.red))
-                            .monospacedDigit()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(group.name).font(.largeTitle.weight(.bold)).accessibilityAddTraits(.isHeader)
+                        Text("\(group.participants.count) participantes · Criado a \(DateFormat.rowDate(group.createdAt))")
+                            .font(.subheadline).foregroundStyle(Theme.textSecondary)
                     }
-                    .accessibilityElement(children: .combine)
+                    Spacer()
+                    Badge(transfers.isEmpty ? "Saldado" : "Ativo", style: transfers.isEmpty ? .positive : .neutral)
                 }
-            }
-            Section {
-                if transfers.isEmpty {
-                    Label("Está tudo saldado.", systemImage: "checkmark.circle").foregroundStyle(.green)
+                .padding(.top, 8)
+
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        AvatarStack(names: group.participants)
+                        Spacer()
+                        Text("\(group.participants.count) pessoas no cálculo").font(.subheadline).foregroundStyle(Theme.textSecondary)
+                    }
+                    Rectangle().fill(Theme.outline).frame(height: 1)
+                    HStack(alignment: .top, spacing: 0) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Eyebrow("Devem-te")
+                            Text("+ \(MoneyFormat.string(owedToMe.reduce(0) { $0 + $1.amountCents }))")
+                                .font(.title2.weight(.bold).monospacedDigit())
+                            Label("\(owedToMe.count) pessoa\(owedToMe.count == 1 ? "" : "s")", systemImage: "circle.fill")
+                                .font(.caption).foregroundStyle(Theme.textSecondary).labelStyle(DotLabelStyle(color: Theme.primary))
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Rectangle().fill(Theme.outline).frame(width: 1, height: 70)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Eyebrow("Deves")
+                            Text("− \(MoneyFormat.string(iOwe.reduce(0) { $0 + $1.amountCents }))")
+                                .font(.title2.weight(.bold).monospacedDigit())
+                            Label("\(iOwe.count) transferência\(iOwe.count == 1 ? "" : "s")", systemImage: "circle.fill")
+                                .font(.caption).foregroundStyle(Theme.textSecondary).labelStyle(DotLabelStyle(color: Theme.textSecondary))
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 16)
+                    }
+                    Rectangle().fill(Theme.outline).frame(height: 1)
+                    HStack {
+                        Text("Teu balanço líquido:").foregroundStyle(Theme.textSecondary)
+                        Spacer()
+                        Text("\(mine >= 0 ? "+" : "−") \(MoneyFormat.string(abs(mine)))")
+                            .font(.title3.weight(.bold).monospacedDigit())
+                            .foregroundStyle(mine >= 0 ? Theme.primary : Theme.danger)
+                    }
                 }
-                ForEach(transfers, id: \.self) { t in
-                    Button { settling = t } label: {
+                .card(padding: 24)
+                .accessibilityElement(children: .combine)
+
+                VStack(alignment: .leading, spacing: 14) {
+                    HStack {
+                        Text("Balanço do Grupo").font(.headline)
+                        Spacer()
+                        Text("TOTAL: \(MoneyFormat.string(total))").font(.caption.weight(.semibold)).foregroundStyle(Theme.textSecondary)
+                    }
+                    ForEach(group.participants, id: \.self) { p in
+                        let v = net[p] ?? 0
+                        VStack(spacing: 8) {
+                            HStack(spacing: 10) {
+                                InitialsAvatar(name: p, highlighted: p == SplitConstants.me, size: 32)
+                                Text(p == SplitConstants.me ? "Eu (tu)" : p)
+                                Spacer()
+                                Text("\(v > 0 ? "+ " : v < 0 ? "− " : "")\(MoneyFormat.string(abs(v)))")
+                                    .font(.body.weight(.semibold).monospacedDigit())
+                                    .foregroundStyle(v < 0 ? Theme.textSecondary : Theme.textPrimary)
+                            }
+                            ThinProgress(fraction: Double(abs(v)) / Double(maxAbs), color: v > 0 ? Theme.primary : Theme.textSecondary.opacity(0.5), height: 8)
+                        }
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel("\(p): \(v == 0 ? "saldado" : (v > 0 ? "recebe \(MoneyFormat.string(v))" : "deve \(MoneyFormat.string(-v))"))")
+                    }
+                }
+                .card()
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Transferências para saldar").font(.headline)
+                    Text("Número mínimo de transferências. Toca em “Marcar pago” quando o pagamento for feito.")
+                        .font(.caption).foregroundStyle(Theme.textSecondary)
+                    if transfers.isEmpty {
+                        Label("Está tudo saldado.", systemImage: "checkmark.circle.fill").foregroundStyle(Theme.positive)
+                    }
+                    ForEach(transfers, id: \.self) { t in
                         HStack {
-                            Text("\(t.from) → \(t.to)")
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("\(t.from) → \(t.to)").font(.subheadline.weight(.semibold))
+                                Text(MoneyFormat.string(t.amountCents)).font(.subheadline.monospacedDigit()).foregroundStyle(Theme.textSecondary)
+                            }
                             Spacer()
-                            Text(MoneyFormat.string(t.amountCents)).monospacedDigit()
+                            Button { settling = t } label: { Label("Marcar pago", systemImage: "checkmark") }
+                                .buttonStyle(PillButtonStyle())
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                }
+                .card()
+
+                SectionTitle("Despesas")
+                if expenses.isEmpty {
+                    Text("Ainda sem despesas neste grupo.").font(.subheadline).foregroundStyle(Theme.textSecondary).card()
+                } else {
+                    RowsCard {
+                        ForEach(expenses) { e in
+                            HStack(spacing: 12) {
+                                IconTile(systemName: e.isSettlement ? "checkmark.circle" : "receipt", size: 40)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(e.isSettlement ? "Pagamento: \(e.payer) → \(e.shares.keys.sorted().joined(separator: ", "))" : e.title)
+                                        .font(.body.weight(.semibold)).lineLimit(1)
+                                    Text("\(e.isSettlement ? "" : "Pago por \(e.payer) · ")\(DateFormat.rowDate(e.date))")
+                                        .font(.caption).foregroundStyle(Theme.textSecondary)
+                                }
+                                Spacer()
+                                Text(MoneyFormat.string(e.amountCents)).font(.body.weight(.semibold).monospacedDigit())
+                            }
+                            .padding(.horizontal, 16).padding(.vertical, 12)
+                            .contextMenu {
+                                Button(role: .destructive) { deleteExpense(e) } label: { Label("Eliminar", systemImage: "trash") }
+                            }
+                            .accessibilityElement(children: .combine)
+                            .accessibilityAction(named: "Eliminar") { deleteExpense(e) }
+                            if e.id != expenses.last?.id { RowDivider(inset: 68) }
                         }
                     }
-                    .accessibilityHint("Registar este pagamento")
-                }
-            } header: {
-                Text("Transferências para saldar")
-            } footer: {
-                Text("Número mínimo de transferências. Toca numa para a registar como paga.")
-            }
-            Section("Despesas") {
-                ForEach(expenses) { e in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(e.isSettlement ? "Pagamento: \(e.payer) → \(e.shares.keys.sorted().joined(separator: ", "))" : e.title)
-                            Text("\(e.isSettlement ? "" : "Pago por \(e.payer) · ")\(DateFormat.short(e.date))")
-                                .font(.caption).foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        Text(MoneyFormat.string(e.amountCents)).monospacedDigit()
-                    }
-                    .accessibilityElement(children: .combine)
-                }
-                .onDelete { idx in
-                    for i in idx { deleteExpense(expenses[i]) }
                 }
             }
+            .padding(.horizontal, Theme.margin)
+            .padding(.bottom, 100)
         }
-        .navigationTitle(group.name)
+        .screenBackground()
+        .safeAreaInset(edge: .bottom) {
+            Button { adding = true } label: { Label("Nova despesa de grupo", systemImage: "plus") }
+                .buttonStyle(PrimaryButtonStyle())
+                .padding(.horizontal, Theme.margin)
+                .padding(.bottom, 8)
+        }
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button { adding = true } label: { Image(systemName: "plus") }
-                    .accessibilityLabel("Nova despesa partilhada")
-            }
-            ToolbarItem(placement: .secondaryAction) {
-                Button("Editar grupo") { editingGroup = true }
+                Button { editingGroup = true } label: { Image(systemName: "person.badge.plus") }
+                    .accessibilityLabel("Editar grupo e participantes")
             }
         }
         .sheet(isPresented: $adding) { SplitExpenseEditorView(group: group) }
@@ -213,6 +351,17 @@ struct SplitGroupDetailView: View {
         for t in linked { context.delete(t) }
         context.delete(e)
         try? context.save()
+    }
+}
+
+/// Rótulo com um ponto colorido em vez de ícone.
+struct DotLabelStyle: LabelStyle {
+    var color: Color
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 6) {
+            Circle().fill(color).frame(width: 7, height: 7)
+            configuration.title
+        }
     }
 }
 
@@ -289,6 +438,8 @@ struct SplitExpenseEditorView: View {
                     Text("Só a tua parte (\(MoneyFormat.string(shares[SplitConstants.me] ?? 0))) é registada como despesa pessoal.")
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(Theme.background.ignoresSafeArea())
             .navigationTitle("Despesa partilhada")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

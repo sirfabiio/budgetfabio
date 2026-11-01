@@ -46,20 +46,21 @@ struct LockScreen: View {
 
     var body: some View {
         ZStack {
-            Rectangle().fill(.background).ignoresSafeArea()
+            Theme.background.ignoresSafeArea()
             VStack(spacing: 20) {
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 56))
-                    .foregroundStyle(.tint)
+                Image("AppLogo")
+                    .resizable()
+                    .frame(width: 88, height: 88)
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
                     .accessibilityHidden(true)
-                Text("Orçamento bloqueado").font(.title2.bold())
+                Text("Budget do Fábio bloqueado").font(.title2.bold())
                 Button {
                     lock.unlock()
                 } label: {
                     Label("Desbloquear com \(AppLock.biometryName)", systemImage: "faceid")
                         .padding(.horizontal)
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(PillButtonStyle(filled: true))
             }
         }
         .onAppear { lock.unlock() }
