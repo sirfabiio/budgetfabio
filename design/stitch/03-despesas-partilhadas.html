@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Despesas Partilhadas - Viagem Açores</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#2f3130",
+            "secondary-fixed-dim": "#c8c6c5",
+            "on-error-container": "#93000a",
+            "surface-container-low": "#f4f4f2",
+            "on-secondary-fixed": "#1c1b1b",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#c0c1ff",
+            "primary-container": "#3b3bf5",
+            "surface-tint": "#3e3ef7",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e8e8e6",
+            "on-background": "#1a1c1b",
+            "surface-container": "#eeeeec",
+            "outline-variant": "#c6c4d9",
+            "error-container": "#ffdad6",
+            "on-primary-container": "#d1d1ff",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#ffdcc3",
+            "outline": "#767588",
+            "on-tertiary-container": "#ffcba3",
+            "on-secondary-fixed-variant": "#474646",
+            "surface-bright": "#f9f9f7",
+            "secondary-container": "#e5e2e1",
+            "surface-variant": "#e2e3e1",
+            "secondary-fixed": "#e5e2e1",
+            "surface-dim": "#dadad8",
+            "tertiary-fixed-dim": "#ffb77d",
+            "inverse-on-surface": "#f1f1ef",
+            "on-tertiary-fixed": "#2f1500",
+            "on-surface": "#1a1c1b",
+            "secondary": "#5f5e5e",
+            "on-primary-fixed": "#05006c",
+            "on-primary-fixed-variant": "#1e13e2",
+            "error": "#ba1a1a",
+            "inverse-primary": "#c0c1ff",
+            "on-primary": "#ffffff",
+            "on-secondary-container": "#656464",
+            "background": "#f9f9f7",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "on-surface-variant": "#454556",
+            "surface-container-highest": "#e2e3e1",
+            "tertiary-container": "#8d4b00",
+            "primary-fixed": "#e1e0ff",
+            "primary": "#1a0be0",
+            "tertiary": "#6b3700",
+            "surface": "#f9f9f7"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1.5rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.25rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2rem",
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Hanken Grotesk"],
+            "amount-hero": ["Hanken Grotesk"],
+            "headline-md": ["Hanken Grotesk"],
+            "label-caption": ["Hanken Grotesk"],
+            "amount-card": ["Hanken Grotesk"],
+            "body-md": ["Hanken Grotesk"],
+            "body-sm": ["Hanken Grotesk"],
+            "title-card": ["Hanken Grotesk"],
+            "headline-sm": ["Hanken Grotesk"],
+            "body-lg": ["Hanken Grotesk"],
+            "amount-row": ["Hanken Grotesk"],
+            "label-caps": ["Hanken Grotesk"],
+            "display-hero": ["Hanken Grotesk"]
+          },
+          "fontSize": {
+            "headline-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "amount-hero": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "headline-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "amount-card": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["15px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "title-card": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-sm": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "amount-row": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600" }],
+            "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    body {
+      -webkit-tap-highlight-color: transparent;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
+    }
+    .custom-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scroll {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-high text-on-surface antialiased min-h-screen flex justify-center items-center py-0 sm:py-8 font-body-md selection:bg-primary-container selection:text-white">
+<!-- iPhone 15 Pro Canvas Container (393pt x 852pt) -->
+<div class="relative w-full max-w-[393px] h-[852px] bg-surface flex flex-col overflow-hidden sm:rounded-[52px] sm:border-[8px] sm:border-[#1F2024] sm:shadow-2xl">
+<!-- iOS Native Status Bar (59pt area clearance) -->
+<div class="h-[54px] w-full px-7 pt-3.5 flex justify-between items-center select-none shrink-0 z-40 bg-surface">
+<span class="text-title-card font-title-card text-[15px] font-semibold tracking-tight text-on-surface">9:41</span>
+<!-- Dynamic Island simulated top spacer -->
+<div class="w-[124px] h-[35px] bg-[#000000] rounded-full mx-auto hidden"></div>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[17px]" data-icon="signal_cellular_alt">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[17px]" data-icon="wifi">wifi</span>
+<div class="w-[24px] h-[12px] border border-on-surface rounded-[4px] p-[1.5px] flex items-center">
+<div class="h-full w-[85%] bg-on-surface rounded-[1.5px]"></div>
+</div>
+</div>
+</div>
+<!-- Navigation Header (Task Sub-Screen Hierarchy) -->
+<header class="px-5 pt-1 pb-3 flex items-center justify-between shrink-0 bg-surface border-b border-surface-container-high z-30">
+<button class="group flex items-center gap-0.5 text-primary-container active:opacity-60 transition-opacity -ml-1.5 focus:outline-none" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="arrow_back_ios">arrow_back_ios</span>
+<span class="font-body-lg text-body-lg text-[16px] -ml-1 text-primary-container font-medium">Grupos</span>
+</button>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded-full border border-surface-container-high bg-surface-container-lowest flex items-center justify-center text-on-surface active:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+<button class="w-8 h-8 rounded-full border border-surface-container-high bg-surface-container-lowest flex items-center justify-center text-on-surface active:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="person_add">person_add</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content Canvas (Restrained Editorial Architecture) -->
+<main class="flex-1 overflow-y-auto custom-scroll px-5 pt-4 pb-28 space-y-6">
+<!-- Group Title Header -->
+<section class="space-y-0.5">
+<div class="flex items-baseline justify-between">
+<h1 class="font-headline-md text-headline-md tracking-tight text-on-surface font-semibold">Viagem Açores 🌋</h1>
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded-full bg-surface-container text-secondary tracking-wider">ATIVO</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">4 participantes • Criado a 12 Out</p>
+</section>
+<!-- Balanço Geral (Editorial Card) -->
+<section class="bg-surface-container-lowest rounded-2xl p-5 border border-surface-container-high space-y-5">
+<!-- Avatares & Pessoas -->
+<div class="flex items-center justify-between pb-3 border-b border-surface-container-high">
+<div class="flex items-center -space-x-2">
+<div class="w-8 h-8 rounded-full bg-[#111111] text-surface-container-lowest flex items-center justify-center font-label-caps text-[11px] ring-2 ring-surface-container-lowest font-semibold">RP</div>
+<div class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-caps text-[11px] ring-2 ring-surface-container-lowest font-medium">AF</div>
+<div class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-caps text-[11px] ring-2 ring-surface-container-lowest font-medium">TS</div>
+<div class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-caps text-[11px] ring-2 ring-surface-container-lowest font-medium">MC</div>
+</div>
+<span class="font-label-caption text-label-caption text-secondary">4 pessoas no cálculo</span>
+</div>
+<!-- Metric Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<span class="font-label-caps text-label-caps text-secondary block uppercase tracking-wider">Devem-te</span>
+<div class="font-headline-sm text-headline-sm tracking-tight text-on-surface font-bold tabular-nums">
+              + 40,00 €
+            </div>
+<div class="inline-flex items-center gap-1 text-[11px] text-secondary font-label-caption">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+              2 pessoas
+            </div>
+</div>
+<div class="space-y-1 border-l border-surface-container-high pl-4">
+<span class="font-label-caps text-label-caps text-secondary block uppercase tracking-wider">Deves</span>
+<div class="font-headline-sm text-headline-sm tracking-tight text-on-surface font-bold tabular-nums">
+              − 23,50 €
+            </div>
+<div class="inline-flex items-center gap-1 text-[11px] text-secondary font-label-caption">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+              1 despesa
+            </div>
+</div>
+</div>
+<!-- Balanço Líquido Pessoal -->
+<div class="pt-3 border-t border-surface-container-high flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-secondary">Teu balanço líquido:</span>
+<span class="font-title-card text-title-card text-primary-container font-semibold tabular-nums">+ 16,50 €</span>
+</div>
+</section>
+<!-- Gráfico de Balanço por Pessoa -->
+<section class="bg-surface-container-lowest rounded-2xl p-5 border border-surface-container-high space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="font-title-card text-title-card text-on-surface">Balanço do Grupo</h2>
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Total: 294,00 €</span>
+</div>
+<div class="space-y-3 pt-1">
+<!-- Rui (Tu) -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-center text-body-sm">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-[#111111] text-surface-container-lowest flex items-center justify-center font-label-caps text-[10px]">RP</span>
+<span class="font-title-card text-body-md text-on-surface font-medium">Rui (Tu)</span>
+</div>
+<span class="font-amount-row text-amount-row text-on-surface tabular-nums font-semibold">+ 40,00 €</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-primary-container rounded-full" style="width: 80%;"></div>
+</div>
+</div>
+<!-- Ana -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-center text-body-sm">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-caps text-[10px]">AF</span>
+<span class="font-body-md text-body-md text-on-surface">Ana</span>
+</div>
+<span class="font-amount-row text-amount-row text-secondary tabular-nums font-medium">− 15,00 €</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary-fixed-dim rounded-full" style="width: 35%;"></div>
+</div>
+</div>
+<!-- Tiago -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-center text-body-sm">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-caps text-[10px]">TS</span>
+<span class="font-body-md text-body-md text-on-surface">Tiago</span>
+</div>
+<span class="font-amount-row text-amount-row text-secondary tabular-nums font-medium">− 25,00 €</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary-fixed-dim rounded-full" style="width: 55%;"></div>
+</div>
+</div>
+<!-- Marta -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-center text-body-sm">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-caps text-[10px]">MC</span>
+<span class="font-body-md text-body-md text-on-surface">Marta</span>
+</div>
+<span class="font-amount-row text-amount-row text-secondary tabular-nums font-medium">0,00 €</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-transparent rounded-full" style="width: 0%;"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Saldar Contas (Algoritmo de Liquidação Mínima) -->
+<section class="space-y-3">
+<div class="flex items-baseline justify-between">
+<div class="flex items-center gap-1.5">
+<h2 class="font-title-card text-title-card text-on-surface">Saldar Contas</h2>
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="info">info</span>
+</div>
+<span class="font-label-caption text-label-caption text-secondary">2 transferências mínimas</span>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-surface-container-high divide-y divide-surface-container-high overflow-hidden">
+<!-- Item 1: Ana -> Rui -->
+<div class="p-4 flex items-center justify-between gap-3 hover:bg-surface-bright transition-colors">
+<div class="space-y-1 min-w-0">
+<div class="flex items-center gap-2 text-on-surface font-title-card text-[15px]">
+<span class="font-semibold text-on-surface">Ana</span>
+<span class="material-symbols-outlined text-[15px] text-secondary" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-semibold text-on-surface">Rui</span>
+</div>
+<div class="font-body-sm text-body-sm text-secondary tabular-nums">
+                Montante: <strong class="text-on-surface font-semibold">15,00 €</strong>
+</div>
+</div>
+<button class="h-8 px-3.5 rounded-full border border-surface-container-high bg-surface-container-lowest text-on-surface font-label-caption text-label-caption font-semibold flex items-center gap-1 hover:border-on-surface active:bg-surface-container transition-all shrink-0" type="button">
+<span class="material-symbols-outlined text-[14px]" data-icon="check">check</span>
+<span>Marcar pago</span>
+</button>
+</div>
+<!-- Item 2: Tiago -> Rui -->
+<div class="p-4 flex items-center justify-between gap-3 hover:bg-surface-bright transition-colors">
+<div class="space-y-1 min-w-0">
+<div class="flex items-center gap-2 text-on-surface font-title-card text-[15px]">
+<span class="font-semibold text-on-surface">Tiago</span>
+<span class="material-symbols-outlined text-[15px] text-secondary" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-semibold text-on-surface">Rui</span>
+</div>
+<div class="font-body-sm text-body-sm text-secondary tabular-nums">
+                Montante: <strong class="text-on-surface font-semibold">25,00 €</strong>
+</div>
+</div>
+<button class="h-8 px-3.5 rounded-full border border-surface-container-high bg-surface-container-lowest text-on-surface font-label-caption text-label-caption font-semibold flex items-center gap-1 hover:border-on-surface active:bg-surface-container transition-all shrink-0" type="button">
+<span class="material-symbols-outlined text-[14px]" data-icon="check">check</span>
+<span>Marcar pago</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Despesas do Grupo (Lista Cronológica Editorial) -->
+<section class="space-y-3">
+<div class="flex items-baseline justify-between">
+<h2 class="font-title-card text-title-card text-on-surface">Despesas do Grupo</h2>
+<button class="font-label-caption text-label-caption text-primary-container font-semibold" type="button">Ver todas (3)</button>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-surface-container-high divide-y divide-surface-container-high">
+<!-- Transação 1: Jantar Furnas -->
+<div class="p-4 flex items-center justify-between gap-3 hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low border border-surface-container-high flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="restaurant">restaurant</span>
+</div>
+<div class="min-w-0">
+<h3 class="font-title-card text-body-lg text-on-surface font-medium truncate">Jantar Furnas</h3>
+<p class="font-body-sm text-body-sm text-secondary truncate">Pago por Rui • Ontem, 21:15</p>
+</div>
+</div>
+<div class="text-right shrink-0">
+<div class="font-amount-row text-amount-row text-on-surface tabular-nums">94,00 €</div>
+<div class="font-label-caption text-[11px] text-secondary tabular-nums">tua parte: 23,50 €</div>
+</div>
+</div>
+<!-- Transação 2: Aluguer Carro -->
+<div class="p-4 flex items-center justify-between gap-3 hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low border border-surface-container-high flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="directions_car">directions_car</span>
+</div>
+<div class="min-w-0">
+<h3 class="font-title-card text-body-lg text-on-surface font-medium truncate">Aluguer Carro</h3>
+<p class="font-body-sm text-body-sm text-secondary truncate">Pago por Tiago • 14 Out</p>
+</div>
+</div>
+<div class="text-right shrink-0">
+<div class="font-amount-row text-amount-row text-on-surface tabular-nums">160,00 €</div>
+<div class="font-label-caption text-[11px] text-secondary tabular-nums">tua parte: 40,00 €</div>
+</div>
+</div>
+<!-- Transação 3: Entradas Parque Terra Nostra -->
+<div class="p-4 flex items-center justify-between gap-3 hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low border border-surface-container-high flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="local_activity">local_activity</span>
+</div>
+<div class="min-w-0">
+<h3 class="font-title-card text-body-lg text-on-surface font-medium truncate">Entradas Terra Nostra</h3>
+<p class="font-body-sm text-body-sm text-secondary truncate">Pago por Ana • 13 Out</p>
+</div>
+</div>
+<div class="text-right shrink-0">
+<div class="font-amount-row text-amount-row text-on-surface tabular-nums">40,00 €</div>
+<div class="font-label-caption text-[11px] text-secondary tabular-nums">tua parte: 10,00 €</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action CTA (Anchored Dock at Bottom with Safe Area clearance) -->
+<div class="absolute bottom-0 left-0 w-full px-5 pt-3 pb-8 bg-gradient-to-t from-surface via-surface/95 to-transparent z-40 pointer-events-none">
+<div class="pointer-events-auto">
+<button class="w-full h-[52px] bg-primary-container text-white rounded-[14px] flex items-center justify-center gap-2 font-title-card text-title-card active:opacity-90 active:scale-[0.99] transition-all shadow-none focus:outline-none" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+<span>Nova despesa de grupo</span>
+</button>
+</div>
+<!-- iOS Home Indicator Clearance (34pt inset) -->
+<div class="w-32 h-1 bg-on-surface/20 rounded-full mx-auto mt-4"></div>
+</div>
+</div>
+</body></html>

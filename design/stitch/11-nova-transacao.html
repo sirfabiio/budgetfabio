@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nova Transação - Finanças</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Hanken Grotesk -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-low": "#f4f4f2",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#8d4b00",
+            "surface-container-high": "#e8e8e6",
+            "on-secondary-container": "#656464",
+            "surface-variant": "#e2e3e1",
+            "on-secondary-fixed": "#1c1b1b",
+            "on-primary-fixed": "#05006c",
+            "surface-container": "#eeeeec",
+            "surface-bright": "#f9f9f7",
+            "on-background": "#1a1c1b",
+            "error-container": "#ffdad6",
+            "on-secondary-fixed-variant": "#474646",
+            "background": "#f9f9f7",
+            "surface-tint": "#3e3ef7",
+            "tertiary-fixed-dim": "#ffb77d",
+            "primary-fixed": "#e1e0ff",
+            "surface-container-highest": "#e2e3e1",
+            "surface-container-lowest": "#ffffff",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#d1d1ff",
+            "on-tertiary-fixed": "#2f1500",
+            "surface-dim": "#dadad8",
+            "primary-container": "#3b3bf5",
+            "outline": "#767588",
+            "on-tertiary-container": "#ffcba3",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#c8c6c5",
+            "on-primary-fixed-variant": "#1e13e2",
+            "tertiary": "#6b3700",
+            "primary-fixed-dim": "#c0c1ff",
+            "secondary-container": "#e5e2e1",
+            "on-surface": "#1a1c1b",
+            "secondary": "#5f5e5e",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "tertiary-fixed": "#ffdcc3",
+            "surface": "#f9f9f7",
+            "outline-variant": "#c6c4d9",
+            "secondary-fixed": "#e5e2e1",
+            "inverse-primary": "#c0c1ff",
+            "primary": "#1a0be0",
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#2f3130",
+            "inverse-on-surface": "#f1f1ef",
+            "on-surface-variant": "#454556"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "amount-card": ["Hanken Grotesk"],
+            "body-lg": ["Hanken Grotesk"],
+            "headline-md": ["Hanken Grotesk"],
+            "body-md": ["Hanken Grotesk"],
+            "label-caps": ["Hanken Grotesk"],
+            "body-sm": ["Hanken Grotesk"],
+            "label-caption": ["Hanken Grotesk"],
+            "headline-lg": ["Hanken Grotesk"],
+            "amount-hero": ["Hanken Grotesk"],
+            "display-hero": ["Hanken Grotesk"],
+            "title-card": ["Hanken Grotesk"],
+            "headline-sm": ["Hanken Grotesk"],
+            "amount-row": ["Hanken Grotesk"]
+          },
+          "fontSize": {
+            "amount-card": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["15px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "label-caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "amount-hero": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "title-card": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-sm": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "amount-row": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #0d0e0d;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .cursor-blink {
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    /* Hide scrollbar for category pills container */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex items-center justify-center min-h-screen p-0 sm:p-4 text-on-surface select-none">
+<!-- iPhone 15 Pro Canvas (393pt x 852pt) -->
+<div class="relative w-[393px] h-[852px] bg-[#111211] overflow-hidden rounded-[50px] shadow-2xl flex flex-col justify-end">
+<!-- Dimmed Background Peek (Simulating previous screen in background per HIG) -->
+<div class="absolute inset-0 bg-[#161716] opacity-40 scale-[0.94] origin-top rounded-[44px] pointer-events-none transition-transform duration-300">
+<!-- Faux Status Bar of Parent -->
+<div class="pt-3 px-7 flex justify-between items-center text-white/50 text-xs">
+<span class="font-semibold">09:41</span>
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-[14px]">wifi</span>
+<span class="material-symbols-outlined text-[14px]">battery_full</span>
+</div>
+</div>
+<!-- Background Abstract Content -->
+<div class="p-6 mt-8 space-y-4">
+<div class="h-8 w-32 bg-white/20 rounded-lg"></div>
+<div class="h-28 w-full bg-white/10 rounded-2xl"></div>
+<div class="h-44 w-full bg-white/10 rounded-2xl"></div>
+</div>
+</div>
+<!-- Authentic iOS Modal Bottom Sheet Container -->
+<div class="relative w-full h-[804px] bg-surface-container-lowest rounded-t-[34px] flex flex-col shadow-[0_-8px_30px_rgba(0,0,0,0.3)] border-t border-surface-container-high z-10 overflow-hidden">
+<!-- Top Grabber Bar -->
+<div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing">
+<div class="w-9 h-1 rounded-full bg-surface-container-high"></div>
+</div>
+<!-- Header: Title "Nova Transação" + Close button "✕" -->
+<div class="px-5 py-2.5 flex items-center justify-between">
+<h1 class="text-headline-sm font-headline-sm text-on-surface">Nova Transação</h1>
+<button aria-label="Fechar" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-secondary hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Scrollable Core Form Area -->
+<div class="flex-1 overflow-y-auto no-scrollbar px-5 space-y-3 pb-2">
+<!-- Segmented Control ["Despesa", "Receita", "Transferência"] -->
+<div class="p-1 bg-surface-container-high rounded-xl flex items-center">
+<button class="flex-1 py-1.5 rounded-[10px] bg-surface-container-lowest shadow-sm text-on-surface text-body-sm font-title-card text-center transition-all">
+            Despesa
+          </button>
+<button class="flex-1 py-1.5 rounded-[10px] text-secondary hover:text-on-surface text-body-sm font-body-sm text-center transition-all">
+            Receita
+          </button>
+<button class="flex-1 py-1.5 rounded-[10px] text-secondary hover:text-on-surface text-body-sm font-body-sm text-center transition-all">
+            Transferência
+          </button>
+</div>
+<!-- Oversized Amount Display -->
+<div class="flex flex-col items-center justify-center py-2.5">
+<span class="text-label-caps font-label-caps text-secondary uppercase tracking-wider mb-1">Montante</span>
+<div class="flex items-center justify-center text-on-surface tracking-tight">
+<span class="text-display-hero font-display-hero text-on-surface font-light">− 42,50</span>
+<span class="text-headline-md font-headline-md text-secondary ml-1.5 font-light">€</span>
+<div class="w-0.5 h-8 bg-primary-container ml-1.5 rounded-full cursor-blink"></div>
+</div>
+</div>
+<!-- Category Chips -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-center px-0.5">
+<span class="text-label-caption font-label-caption text-secondary">Categoria</span>
+<span class="text-label-caption font-label-caption text-primary-container font-medium cursor-pointer">Ver todas</span>
+</div>
+<div class="grid grid-cols-3 gap-1.5">
+<!-- Alimentação (Selected) -->
+<button class="h-9 px-2.5 rounded-xl border border-primary-container bg-primary-container/10 flex items-center justify-center space-x-1.5 text-primary-container transition-transform active:scale-95">
+<span class="text-sm">🥗</span>
+<span class="text-body-sm font-title-card truncate">Alimentação</span>
+</button>
+<!-- Transportes -->
+<button class="h-9 px-2.5 rounded-xl border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low flex items-center justify-center space-x-1.5 text-on-surface transition-transform active:scale-95">
+<span class="text-sm">🚇</span>
+<span class="text-body-sm font-body-sm truncate">Transportes</span>
+</button>
+<!-- Saúde -->
+<button class="h-9 px-2.5 rounded-xl border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low flex items-center justify-center space-x-1.5 text-on-surface transition-transform active:scale-95">
+<span class="text-sm">💊</span>
+<span class="text-body-sm font-body-sm truncate">Saúde</span>
+</button>
+<!-- Lazer -->
+<button class="h-9 px-2.5 rounded-xl border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low flex items-center justify-center space-x-1.5 text-on-surface transition-transform active:scale-95">
+<span class="text-sm">🎬</span>
+<span class="text-body-sm font-body-sm truncate">Lazer</span>
+</button>
+<!-- Casa -->
+<button class="h-9 px-2.5 rounded-xl border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low flex items-center justify-center space-x-1.5 text-on-surface transition-transform active:scale-95">
+<span class="text-sm">🏠</span>
+<span class="text-body-sm font-body-sm truncate">Casa</span>
+</button>
+<!-- Compras -->
+<button class="h-9 px-2.5 rounded-xl border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low flex items-center justify-center space-x-1.5 text-on-surface transition-transform active:scale-95">
+<span class="text-sm">🛍️</span>
+<span class="text-body-sm font-body-sm truncate">Compras</span>
+</button>
+</div>
+</div>
+<!-- Payment Method Selector Pills -->
+<div class="space-y-1.5">
+<span class="text-label-caption font-label-caption text-secondary px-0.5">Método de Pagamento</span>
+<div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-0.5">
+<!-- Apple Pay (Selected) -->
+<button class="h-8 px-3 rounded-full border border-primary-container bg-primary-container/10 flex items-center space-x-1.5 text-primary-container whitespace-nowrap active:scale-95">
+<span class="material-symbols-outlined text-[15px]">credit_card</span>
+<span class="text-label-caption font-title-card">Apple Pay</span>
+</button>
+<!-- Cartão -->
+<button class="h-8 px-3 rounded-full border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low text-secondary hover:text-on-surface flex items-center space-x-1.5 whitespace-nowrap active:scale-95">
+<span class="material-symbols-outlined text-[15px]">payments</span>
+<span class="text-label-caption font-body-sm">Cartão</span>
+</button>
+<!-- Dinheiro -->
+<button class="h-8 px-3 rounded-full border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low text-secondary hover:text-on-surface flex items-center space-x-1.5 whitespace-nowrap active:scale-95">
+<span class="material-symbols-outlined text-[15px]">euro</span>
+<span class="text-label-caption font-body-sm">Dinheiro</span>
+</button>
+<!-- Transferência -->
+<button class="h-8 px-3 rounded-full border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low text-secondary hover:text-on-surface flex items-center space-x-1.5 whitespace-nowrap active:scale-95">
+<span class="material-symbols-outlined text-[15px]">swap_horiz</span>
+<span class="text-label-caption font-body-sm">Transferência</span>
+</button>
+</div>
+</div>
+<!-- Date Row & Merchant/Description Input -->
+<div class="space-y-2 pt-1">
+<!-- Date Pill / Row -->
+<div class="flex items-center justify-between bg-surface-container-low px-3.5 py-2.5 rounded-xl border border-surface-container-high">
+<div class="flex items-center space-x-2 text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-secondary">calendar_today</span>
+<span class="text-body-sm font-title-card">Hoje, 24 Out</span>
+</div>
+<button class="text-label-caption font-label-caption text-primary-container flex items-center space-x-0.5">
+<span>Alterar</span>
+<span class="material-symbols-outlined text-[14px]">expand_more</span>
+</button>
+</div>
+<!-- Merchant / Note Input Field -->
+<div class="relative flex items-center bg-surface-container-low rounded-xl border border-surface-container-high px-3.5 py-2">
+<span class="material-symbols-outlined text-[18px] text-secondary mr-2">edit_note</span>
+<input class="w-full bg-transparent border-0 p-0 text-body-sm font-body-sm text-on-surface placeholder:text-secondary focus:ring-0 focus:outline-none" placeholder="Adicionar nota ou comerciante..." type="text" value="Pingo Doce - Saldanha"/>
+</div>
+</div>
+</div>
+<!-- Custom iOS Minimalist Numeric Keypad -->
+<div class="w-full bg-surface-container-low/70 border-t border-surface-container-high pt-2 pb-1 px-4">
+<div class="grid grid-cols-3 gap-1.5 max-w-[340px] mx-auto">
+<!-- Row 1 -->
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">1</button>
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">2</button>
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">3</button>
+<!-- Row 2 -->
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">4</button>
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">5</button>
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">6</button>
+<!-- Row 3 -->
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">7</button>
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">8</button>
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">9</button>
+<!-- Row 4 -->
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">,</button>
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">0</button>
+<button aria-label="Apagar" class="h-11 rounded-xl bg-surface-container-lowest border border-surface-container-high text-title-card font-title-card text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px] text-secondary">backspace</span>
+</button>
+</div>
+</div>
+<!-- Action Footer (Primary CTA + Safe Area Indicator) -->
+<div class="px-5 pt-2 pb-6 bg-surface-container-lowest border-t border-surface-container-high/60">
+<button class="w-full h-[50px] bg-primary-container hover:bg-primary-container/90 active:scale-[0.99] text-on-primary font-title-card text-title-card rounded-2xl flex items-center justify-center shadow-sm transition-all duration-150">
+          Guardar Transação
+        </button>
+<!-- iOS Home Indicator -->
+<div class="w-32 h-1 bg-on-surface/20 rounded-full mx-auto mt-4"></div>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Definições • Finanças</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Hanken Grotesk -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#2f3130",
+            "secondary-fixed-dim": "#c8c6c5",
+            "on-error-container": "#93000a",
+            "surface-container-low": "#f4f4f2",
+            "on-secondary-fixed": "#1c1b1b",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#c0c1ff",
+            "primary-container": "#3b3bf5",
+            "surface-tint": "#3e3ef7",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e8e8e6",
+            "on-background": "#1a1c1b",
+            "surface-container": "#eeeeec",
+            "outline-variant": "#c6c4d9",
+            "error-container": "#ffdad6",
+            "on-primary-container": "#d1d1ff",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#ffdcc3",
+            "outline": "#767588",
+            "on-tertiary-container": "#ffcba3",
+            "on-secondary-fixed-variant": "#474646",
+            "surface-bright": "#f9f9f7",
+            "secondary-container": "#e5e2e1",
+            "surface-variant": "#e2e3e1",
+            "secondary-fixed": "#e5e2e1",
+            "surface-dim": "#dadad8",
+            "tertiary-fixed-dim": "#ffb77d",
+            "inverse-on-surface": "#f1f1ef",
+            "on-tertiary-fixed": "#2f1500",
+            "on-surface": "#1a1c1b",
+            "secondary": "#5f5e5e",
+            "on-primary-fixed": "#05006c",
+            "on-primary-fixed-variant": "#1e13e2",
+            "error": "#ba1a1a",
+            "inverse-primary": "#c0c1ff",
+            "on-primary": "#ffffff",
+            "on-secondary-container": "#656464",
+            "background": "#f9f9f7",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "on-surface-variant": "#454556",
+            "surface-container-highest": "#e2e3e1",
+            "tertiary-container": "#8d4b00",
+            "primary-fixed": "#e1e0ff",
+            "primary": "#1a0be0",
+            "tertiary": "#6b3700",
+            "surface": "#f9f9f7"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1.5rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.25rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2rem",
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Hanken Grotesk"],
+            "amount-hero": ["Hanken Grotesk"],
+            "headline-md": ["Hanken Grotesk"],
+            "label-caption": ["Hanken Grotesk"],
+            "amount-card": ["Hanken Grotesk"],
+            "body-md": ["Hanken Grotesk"],
+            "body-sm": ["Hanken Grotesk"],
+            "title-card": ["Hanken Grotesk"],
+            "headline-sm": ["Hanken Grotesk"],
+            "body-lg": ["Hanken Grotesk"],
+            "amount-row": ["Hanken Grotesk"],
+            "label-caps": ["Hanken Grotesk"],
+            "display-hero": ["Hanken Grotesk"]
+          },
+          "fontSize": {
+            "headline-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "amount-hero": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "headline-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "amount-card": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["15px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "title-card": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-sm": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "amount-row": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600" }],
+            "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Suavização de fontes iOS */
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .material-symbols-outlined {
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    /* Hairline borders Apple */
+    .hairline-b {
+      position: relative;
+    }
+    .hairline-b::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 56px;
+      height: 1px;
+      background-color: #E8E8E6;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#F7F7F5] text-on-surface antialiased flex justify-center min-h-screen selection:bg-primary-container selection:text-white">
+<!-- iPhone 15 Pro Wrapper (393px × 852px Canvas Anchor) -->
+<div class="relative w-full max-w-[393px] min-h-[852px] bg-[#F7F7F5] flex flex-col justify-between overflow-x-hidden pb-28">
+<!-- Top iOS Safe Area & Native Status Bar -->
+<header class="w-full pt-3 px-7 flex justify-between items-center z-40 select-none">
+<span class="text-body-sm font-semibold tracking-tight text-on-surface">9:41</span>
+<!-- Dynamic Island Pill Placeholder Dimension -->
+<div class="w-[124px] h-[32px] bg-black rounded-full mx-auto -mt-1 hidden"></div>
+<!-- Native Status Icons -->
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[15px] font-semibold" data-icon="signal_cellular_alt">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[15px] font-semibold" data-icon="wifi">wifi</span>
+<span class="material-symbols-outlined text-[18px] font-semibold" data-icon="battery_full">battery_full</span>
+</div>
+</header>
+<!-- Top Navigation / Shared TopAppBar Component Anchor (Docked) -->
+<div class="flex justify-between items-center w-full px-5 pt-3 pb-2 max-w-[393px] mx-auto">
+<span class="text-label-caps font-label-caps tracking-widest text-secondary uppercase font-semibold">Preferências</span>
+<button aria-label="Ajustes rápidos" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors text-on-surface active:opacity-70">
+<span class="material-symbols-outlined text-[20px]" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- Main Content Canvas -->
+<main class="px-5 space-y-6 flex-1">
+<!-- Large Title (Apple Human Interface Guidelines) -->
+<div class="pt-1 pb-1">
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Mais</h1>
+</div>
+<!-- Cartão de Perfil / Utilizador (Level 1: Branco, Hairline 1pt, Radius 24pt) -->
+<section class="bg-surface-container-lowest border border-surface-container-high rounded-2xl p-4 flex items-center gap-4 transition-all active:scale-[0.99]">
+<!-- Avatar Minimalista RP -->
+<div class="w-14 h-14 rounded-full bg-surface-container-low border border-surface-container-high flex items-center justify-center text-on-surface font-headline-sm font-semibold tracking-tight shrink-0">
+          RP
+        </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h2 class="text-title-card font-title-card text-on-surface truncate">Rui Pereira</h2>
+</div>
+<p class="text-body-sm font-body-sm text-secondary truncate">rui.pereira@icloud.com</p>
+<div class="mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-container-low border border-surface-container-high">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span class="text-[10px] font-semibold tracking-wide text-secondary uppercase">Plano Pessoal • Local</span>
+</div>
+</div>
+<div class="text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</section>
+<!-- Grupo 1: Gestão Financeira -->
+<section class="space-y-1.5">
+<h3 class="text-label-caps font-label-caps uppercase text-secondary tracking-wider px-2">Gestão Financeira</h3>
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-2xl overflow-hidden divide-y divide-surface-container-high">
+<!-- Row: Categorias -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="category">category</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Categorias</span>
+</div>
+<div class="flex items-center text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row: Despesas Recorrentes -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="update">update</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Despesas Recorrentes</span>
+</div>
+<div class="flex items-center text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row: Despesas Partilhadas & Grupos -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="group">group</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Despesas Partilhadas &amp; Grupos</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-label-caption font-label-caption text-secondary bg-surface-container-low border border-surface-container-high px-2 py-0.5 rounded-full">1 ativo</span>
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row: Captura Automática Apple Pay -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="credit_card">credit_card</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Captura Automática Apple Pay</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-body-sm font-body-sm text-primary-container font-medium">Ativo</span>
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Grupo 2: Dados e Privacidade -->
+<section class="space-y-1.5">
+<h3 class="text-label-caps font-label-caps uppercase text-secondary tracking-wider px-2">Dados e Privacidade</h3>
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-2xl overflow-hidden divide-y divide-surface-container-high">
+<!-- Row: Bloqueio com Face ID (Toggle Interativo) -->
+<div class="flex items-center justify-between px-4 py-3.5">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="lock">lock</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Bloqueio com Face ID</span>
+</div>
+<!-- iOS Switch Component Native (#3B3BF5 Indigo) -->
+<label class="relative inline-flex items-center cursor-pointer select-none">
+<input checked="" class="sr-only peer" id="faceid-toggle" type="checkbox"/>
+<div class="w-12 h-7 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-200 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- Row: Exportar Dados -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="ios_share">ios_share</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Exportar Dados</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-body-sm font-body-sm text-secondary truncate max-w-[140px] text-right">CSV, PDF Semestral</span>
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row: Importar extrato bancário (CSV) -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="file_upload">file_upload</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Importar extrato bancário (CSV)</span>
+</div>
+<div class="flex items-center text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row: Cópia de segurança no iCloud -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="cloud_sync">cloud_sync</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Cópia de segurança no iCloud</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-body-sm font-body-sm text-secondary">Hoje, 04:12</span>
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Grupo 3: Preferências da Aplicação -->
+<section class="space-y-1.5">
+<h3 class="text-label-caps font-label-caps uppercase text-secondary tracking-wider px-2">Preferências da Aplicação</h3>
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-2xl overflow-hidden divide-y divide-surface-container-high">
+<!-- Row: Moeda Principal -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="euro">euro</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Moeda Principal</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-body-sm font-body-sm text-secondary">Euro (€)</span>
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row: Formato de Data -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="calendar_today">calendar_today</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Formato de Data</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-body-sm font-body-sm text-secondary">DD/MM/AAAA</span>
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row: Aparência -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors cursor-pointer active:bg-surface-container">
+<div class="flex items-center gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="palette">palette</span>
+</div>
+<span class="text-title-card font-title-card text-on-surface text-[15px]">Aparência</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-body-sm font-body-sm text-secondary">Claro (Automático)</span>
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Rodapé Discreto -->
+<footer class="pt-4 pb-8 text-center">
+<p class="text-[12px] font-label-caption text-secondary/70 tracking-tight">Finanças Pessoais v2.4 • Feito com precisão local</p>
+<p class="text-[11px] font-label-caption text-secondary/50 mt-0.5">Encriptação no dispositivo via Enclave Seguro</p>
+</footer>
+</main>
+<!-- BottomNavBar Executed strictly from Shared Components JSON -->
+<!-- Active State: 'Mais' (Índigo #3B3BF5 / primary-container) -->
+<nav aria-label="Navegação Principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-3 pt-2 pb-8 max-w-[393px] mx-auto bg-surface-container-lowest/90 backdrop-blur-md border-t border-surface-container-high">
+<!-- Início -->
+<button class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100 hover:text-primary-container">
+<span class="material-symbols-outlined text-[22px]" data-icon="home">home</span>
+<span class="text-label-caps font-label-caps tracking-tighter">Início</span>
+</button>
+<!-- Histórico -->
+<button class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100 hover:text-primary-container">
+<span class="material-symbols-outlined text-[22px]" data-icon="receipt_long">receipt_long</span>
+<span class="text-label-caps font-label-caps tracking-tighter">Histórico</span>
+</button>
+<!-- Orçamentos -->
+<button class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100 hover:text-primary-container">
+<span class="material-symbols-outlined text-[22px]" data-icon="pie_chart">pie_chart</span>
+<span class="text-label-caps font-label-caps tracking-tighter">Orçamentos</span>
+</button>
+<!-- Cofre -->
+<button class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100 hover:text-primary-container">
+<span class="material-symbols-outlined text-[22px]" data-icon="savings">savings</span>
+<span class="text-label-caps font-label-caps tracking-tighter">Cofre</span>
+</button>
+<!-- Mais (ATIVO: style_active_navigation) -->
+<button aria-current="page" class="flex flex-col items-center justify-center text-primary-container gap-1 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined text-[22px]" data-icon="more_horiz">more_horiz</span>
+<span class="text-label-caps font-label-caps tracking-tighter font-bold">Mais</span>
+</button>
+</nav>
+<!-- Native iOS Home Indicator Bar clearance -->
+<div class="fixed bottom-1 left-1/2 -translate-x-1/2 w-[134px] h-[5px] bg-black/25 rounded-full pointer-events-none z-50"></div>
+</div>
+<!-- Microinteração leve para o switch -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggle = document.getElementById('faceid-toggle');
+      if (toggle) {
+        toggle.addEventListener('change', (e) => {
+          if ('vibrate' in navigator) {
+            navigator.vibrate(10);
+          }
+        });
+      }
+    });
+  </script>
+</body></html>

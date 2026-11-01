@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Finanças - Painel</title>
+<!-- Google Fonts: Hanken Grotesk -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-low": "#f4f4f2",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#8d4b00",
+            "surface-container-high": "#e8e8e6",
+            "on-secondary-container": "#656464",
+            "surface-variant": "#e2e3e1",
+            "on-secondary-fixed": "#1c1b1b",
+            "on-primary-fixed": "#05006c",
+            "surface-container": "#eeeeec",
+            "surface-bright": "#f9f9f7",
+            "on-background": "#1a1c1b",
+            "error-container": "#ffdad6",
+            "on-secondary-fixed-variant": "#474646",
+            "background": "#f9f9f7",
+            "surface-tint": "#3e3ef7",
+            "tertiary-fixed-dim": "#ffb77d",
+            "primary-fixed": "#e1e0ff",
+            "surface-container-highest": "#e2e3e1",
+            "surface-container-lowest": "#ffffff",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#d1d1ff",
+            "on-tertiary-fixed": "#2f1500",
+            "surface-dim": "#dadad8",
+            "primary-container": "#3b3bf5",
+            "outline": "#767588",
+            "on-tertiary-container": "#ffcba3",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#c8c6c5",
+            "on-primary-fixed-variant": "#1e13e2",
+            "tertiary": "#6b3700",
+            "primary-fixed-dim": "#c0c1ff",
+            "secondary-container": "#e5e2e1",
+            "on-surface": "#1a1c1b",
+            "secondary": "#5f5e5e",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "tertiary-fixed": "#ffdcc3",
+            "surface": "#f9f9f7",
+            "outline-variant": "#c6c4d9",
+            "secondary-fixed": "#e5e2e1",
+            "inverse-primary": "#c0c1ff",
+            "primary": "#1a0be0",
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#2f3130",
+            "inverse-on-surface": "#f1f1ef",
+            "on-surface-variant": "#454556"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "amount-card": ["Hanken Grotesk"],
+            "body-lg": ["Hanken Grotesk"],
+            "headline-md": ["Hanken Grotesk"],
+            "body-md": ["Hanken Grotesk"],
+            "label-caps": ["Hanken Grotesk"],
+            "body-sm": ["Hanken Grotesk"],
+            "label-caption": ["Hanken Grotesk"],
+            "headline-lg": ["Hanken Grotesk"],
+            "amount-hero": ["Hanken Grotesk"],
+            "display-hero": ["Hanken Grotesk"],
+            "title-card": ["Hanken Grotesk"],
+            "headline-sm": ["Hanken Grotesk"],
+            "amount-row": ["Hanken Grotesk"]
+          },
+          "fontSize": {
+            "amount-card": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["15px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "label-caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "amount-hero": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "title-card": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-sm": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "amount-row": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'tnum';
+      background-color: #f0f0ee;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* iOS simulated viewport container */
+    .iphone-canvas {
+      width: 393px;
+      min-height: 852px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 20px 40px rgba(0,0,0,0.08);
+      position: relative;
+      margin: 0 auto;
+      overflow-x: hidden;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-low min-h-screen py-0 md:py-8 flex justify-center items-start selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- iPhone 15 Pro Canvas Boundary (393pt wide) -->
+<main class="iphone-canvas bg-surface text-on-surface flex flex-col relative pb-32">
+<!-- Top Status Bar & Navigation Area (Safe area top + TopAppBar) -->
+<header class="w-full pt-12 pb-3 px-5 flex justify-between items-center bg-surface sticky top-0 z-40">
+<!-- Month Selector Pill -->
+<button class="flex items-center gap-1.5 py-1.5 px-3 bg-surface-container-lowest border border-surface-container-high rounded-full active:opacity-70 transition-opacity">
+<span class="font-body-md text-body-md text-on-surface font-medium">Outubro 2026</span>
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="expand_more">expand_more</span>
+</button>
+<!-- App Title Anchor / Actions -->
+<div class="flex items-center gap-2">
+<button aria-label="Ajustes" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-lowest border border-surface-container-high text-on-surface active:opacity-70 transition-opacity hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[20px]" data-icon="tune">tune</span>
+</button>
+</div>
+</header>
+<!-- Main Content Container with standard 20px margins -->
+<div class="px-5 space-y-6">
+<!-- Hero Card: Circular Budget Gauge & Core Metrics -->
+<section class="bg-surface-container-lowest rounded-3xl p-5 border border-surface-container-high flex flex-col items-center">
+<!-- Circular Progress Ring Container -->
+<div class="relative w-56 h-56 flex items-center justify-center my-2">
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 160 160">
+<!-- Background Track: 2px hairline stroke -->
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="#E8E8E4" stroke-width="3"></circle>
+<!-- Progress Segment: Deep Indigo (#3B3BF5), 25.7% remaining arc -->
+<circle class="transition-all duration-700 ease-out" cx="80" cy="80" fill="transparent" r="70" stroke="#3B3BF5" stroke-dasharray="439.8" stroke-dashoffset="326.7" stroke-linecap="round" stroke-width="3.5"></circle>
+</svg>
+<!-- Center Numerals and Subtitle -->
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+<span class="font-amount-hero text-amount-hero text-on-surface tracking-tight leading-none mb-1">
+              219 €
+            </span>
+<span class="font-label-caption text-label-caption text-secondary max-w-[130px] leading-tight">
+              disponível para gastar este mês
+            </span>
+</div>
+</div>
+<!-- Horizontal Divider Hairline -->
+<div class="w-full h-[1px] bg-surface-container-high my-4"></div>
+<!-- Triple Tappable Key Stats Row -->
+<div class="grid grid-cols-3 w-full divide-x divide-surface-container-high text-center">
+<div class="px-1.5 flex flex-col">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider mb-0.5">Orçamento</span>
+<span class="font-amount-row text-amount-row text-on-surface">850,00 €</span>
+</div>
+<div class="px-1.5 flex flex-col">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider mb-0.5">Alocado</span>
+<span class="font-amount-row text-amount-row text-on-surface">631,00 €</span>
+</div>
+<div class="px-1.5 flex flex-col">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider mb-0.5">Disponível</span>
+<span class="font-amount-row text-amount-row text-primary-container">219,00 €</span>
+</div>
+</div>
+</section>
+<!-- Account Balances Row: Saldo à Ordem & Cofre -->
+<section class="grid grid-cols-2 gap-3">
+<!-- Saldo à Ordem Card -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-3xl p-4 flex flex-col justify-between h-28">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Saldo à ordem</span>
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div class="font-amount-card text-amount-card text-on-surface tracking-tight">
+            2.450,20 €
+          </div>
+</div>
+<!-- Cofre Card with Subtle Differentiation -->
+<div class="bg-surface-container-low border border-surface-container-high rounded-3xl p-4 flex flex-col justify-between h-28">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Cofre</span>
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="lock">lock</span>
+</div>
+<div class="font-amount-card text-amount-card text-on-surface tracking-tight">
+            8.120,00 €
+          </div>
+</div>
+</section>
+<!-- Bento Grid Section: Resumo Visual & Micro Gráficos -->
+<section class="space-y-3 pt-1">
+<div class="flex items-center justify-between">
+<h2 class="font-title-card text-title-card text-on-surface">Resumo</h2>
+<span class="font-label-caption text-label-caption text-secondary">Atualizado há 12m</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<!-- Bento 1: Fluxo do mês (Mini comparison bars) -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-3xl p-4 flex flex-col justify-between col-span-1">
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Fluxo do mês</div>
+<div class="font-body-sm text-body-sm font-semibold text-on-surface mt-1">49% gasto</div>
+</div>
+<!-- Progress Bar Stack -->
+<div class="mt-4 space-y-1.5">
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden flex">
+<div class="bg-primary-container h-full rounded-full" style="width: 49%"></div>
+</div>
+<div class="flex justify-between font-label-caption text-label-caption text-secondary text-[10px]">
+<span>1.600 €</span>
+<span>850 €</span>
+</div>
+</div>
+</div>
+<!-- Bento 2: Despesas por categoria (Donut Chart) -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-3xl p-4 flex flex-col justify-between col-span-1">
+<div class="flex justify-between items-start">
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Categorias</div>
+<div class="font-body-sm text-body-sm font-semibold text-on-surface mt-1">Supermercado</div>
+</div>
+<!-- Mini Donut SVG -->
+<svg class="w-8 h-8 -rotate-90 flex-shrink-0" viewbox="0 0 32 32">
+<circle cx="16" cy="16" fill="none" r="12" stroke="#E8E8E4" stroke-width="4"></circle>
+<circle cx="16" cy="16" fill="none" r="12" stroke="#5F5E5E" stroke-dasharray="75.4" stroke-dashoffset="50" stroke-width="4"></circle>
+<circle cx="16" cy="16" fill="none" r="12" stroke="#3B3BF5" stroke-dasharray="75.4" stroke-dashoffset="51.2" stroke-width="4"></circle>
+</svg>
+</div>
+<div class="font-label-caption text-label-caption text-secondary mt-2 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container inline-block"></span>
+<span>32% do total</span>
+</div>
+</div>
+<!-- Bento 3: Tendência (Sparkline) -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-3xl p-4 flex flex-col justify-between col-span-1">
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Tendência</div>
+<div class="font-body-sm text-body-sm font-semibold text-on-surface mt-1">+4,2% vs mês ant.</div>
+</div>
+<!-- Thin Sparkline Chart -->
+<div class="mt-3">
+<svg class="w-full h-8 overflow-visible" viewbox="0 0 100 28">
+<path d="M0,22 Q20,18 35,24 T70,8 T100,4" fill="none" stroke="#3B3BF5" stroke-linecap="round" stroke-width="2"></path>
+<circle cx="100" cy="4" fill="#3B3BF5" r="2.5"></circle>
+</svg>
+</div>
+</div>
+<!-- Bento 4: Taxa de poupança (Semicircle Gauge) -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-3xl p-4 flex flex-col justify-between col-span-1">
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Poupança</div>
+<div class="font-body-sm text-body-sm font-semibold text-on-surface mt-1">Forte (28%)</div>
+</div>
+<div class="flex items-center justify-center pt-1">
+<svg class="w-16 h-8" viewbox="0 0 64 32">
+<path d="M4,30 A28,28 0 0,1 60,30" fill="none" stroke="#E8E8E4" stroke-linecap="round" stroke-width="5"></path>
+<path d="M4,30 A28,28 0 0,1 28,6" fill="none" stroke="#3B3BF5" stroke-linecap="round" stroke-width="5"></path>
+</svg>
+</div>
+</div>
+<!-- Bento 5: Próximos pagamentos (Spans 2 columns) -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-3xl p-4 flex items-center justify-between col-span-2">
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Próximos pagamentos</div>
+<div class="font-body-sm text-body-sm font-semibold text-on-surface mt-0.5">4 despesas agendadas</div>
+</div>
+<!-- Calendar Day obligations bar mini-graphic -->
+<div class="flex items-end gap-1.5 h-7">
+<div class="flex flex-col items-center gap-1">
+<div class="w-2 bg-surface-container-high rounded-full h-3"></div>
+<span class="text-[9px] font-label-caps text-secondary">22</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-2 bg-primary-container rounded-full h-6"></div>
+<span class="text-[9px] font-label-caps text-primary-container font-bold">25</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-2 bg-surface-container-high rounded-full h-4"></div>
+<span class="text-[9px] font-label-caps text-secondary">28</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-2 bg-surface-container-high rounded-full h-5"></div>
+<span class="text-[9px] font-label-caps text-secondary">30</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Transações Recentes -->
+<section class="space-y-3 pt-2">
+<!-- Header with Action -->
+<div class="flex items-center justify-between">
+<h2 class="font-title-card text-title-card text-on-surface">Transações recentes</h2>
+<button class="flex items-center gap-0.5 font-body-sm text-body-sm text-primary-container active:opacity-70 transition-opacity">
+<span>Ver tudo</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- Transactions Card Container -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-3xl overflow-hidden divide-y divide-surface-container-high">
+<!-- Row 1: Pizza -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-[18px]">
+                🍕
+              </div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">Forno Pizza</div>
+<div class="font-body-sm text-body-sm text-secondary">Hoje, 13:45</div>
+</div>
+</div>
+<div class="font-amount-row text-amount-row text-on-surface">
+              − 11,00 €
+            </div>
+</div>
+<!-- Row 2: Cappuccino with Tags -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-[18px]">
+                ☕
+              </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Cappuccino</span>
+<span class="px-1.5 py-0.2 bg-surface-container-high text-secondary rounded font-label-caps text-[9px]">Apple Pay</span>
+<span class="px-1.5 py-0.2 bg-amber-50 text-amber-700 border border-amber-200 rounded font-label-caps text-[9px]">Por rever</span>
+</div>
+<div class="font-body-sm text-body-sm text-secondary">Hoje, 09:15</div>
+</div>
+</div>
+<div class="font-amount-row text-amount-row text-on-surface">
+              − 2,00 €
+            </div>
+</div>
+<!-- Row 3: Farmácia Central -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-[18px]">
+                💊
+              </div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">Farmácia Central</div>
+<div class="font-body-sm text-body-sm text-secondary">Ontem</div>
+</div>
+</div>
+<div class="font-amount-row text-amount-row text-on-surface">
+              − 14,00 €
+            </div>
+</div>
+<!-- Row 4: Cofre -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-[18px]">
+                🏦
+              </div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">Para o cofre</div>
+<div class="font-body-sm text-body-sm text-secondary">Ontem</div>
+</div>
+</div>
+<div class="font-amount-row text-amount-row text-on-surface">
+              − 135,00 €
+            </div>
+</div>
+<!-- Row 5: Salário -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-[18px]">
+                💼
+              </div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">Salário Tech Lda</div>
+<div class="font-body-sm text-body-sm text-secondary">30 Set</div>
+</div>
+</div>
+<div class="font-amount-row text-amount-row text-on-surface">
+              + 1.600,00 €
+            </div>
+</div>
+</div>
+</section>
+</div>
+<!-- Floating Action Button (+ in Deep Indigo) Contextually Positioned Above Bottom Navigation -->
+<div class="fixed bottom-24 right-[calc(50%-196px+20px)] z-40">
+<button aria-label="Adicionar despesa" class="w-14 h-14 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-lg active:scale-95 transition-transform duration-150 focus:outline-none">
+<span class="material-symbols-outlined text-[28px]" data-icon="add">add</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar from Shared Components (Docked at base of iPhone 15 Pro) -->
+<nav class="fixed bottom-0 left-0 right-0 z-30 max-w-[393px] mx-auto bg-surface-container-lowest/90 backdrop-blur-md border-t border-surface-container-high pb-8 pt-2 px-3 flex justify-around items-center">
+<!-- Destination 1: Início (Active) -->
+<a class="flex flex-col items-center justify-center text-primary-container gap-1 active:scale-95 transition-transform duration-100 min-w-[56px] py-1" href="#inicio">
+<span class="material-symbols-outlined text-[22px]" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-label-caps">Início</span>
+</a>
+<!-- Destination 2: Histórico -->
+<a class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100 hover:text-primary-container min-w-[56px] py-1" href="#historico">
+<span class="material-symbols-outlined text-[22px]" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-caps text-label-caps">Histórico</span>
+</a>
+<!-- Destination 3: Orçamentos -->
+<a class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100 hover:text-primary-container min-w-[56px] py-1" href="#orcamentos">
+<span class="material-symbols-outlined text-[22px]" data-icon="pie_chart">pie_chart</span>
+<span class="font-label-caps text-label-caps">Orçamentos</span>
+</a>
+<!-- Destination 4: Cofre -->
+<a class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100 hover:text-primary-container min-w-[56px] py-1" href="#cofre">
+<span class="material-symbols-outlined text-[22px]" data-icon="savings">savings</span>
+<span class="font-label-caps text-label-caps">Cofre</span>
+</a>
+<!-- Destination 5: Mais -->
+<a class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100 hover:text-primary-container min-w-[56px] py-1" href="#mais">
+<span class="material-symbols-outlined text-[22px]" data-icon="more_horiz">more_horiz</span>
+<span class="font-label-caps text-label-caps">Mais</span>
+</a>
+</nav>
+<!-- iOS Home Indicator pill bar -->
+<div class="fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-on-surface/20 rounded-full z-50 pointer-events-none"></div>
+</main>
+</body></html>

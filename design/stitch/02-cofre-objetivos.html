@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cofre — Poupança e Objetivos</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#2f3130",
+            "secondary-fixed-dim": "#c8c6c5",
+            "on-error-container": "#93000a",
+            "surface-container-low": "#f4f4f2",
+            "on-secondary-fixed": "#1c1b1b",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#c0c1ff",
+            "primary-container": "#3b3bf5",
+            "surface-tint": "#3e3ef7",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e8e8e6",
+            "on-background": "#1a1c1b",
+            "surface-container": "#eeeeec",
+            "outline-variant": "#c6c4d9",
+            "error-container": "#ffdad6",
+            "on-primary-container": "#d1d1ff",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#ffdcc3",
+            "outline": "#767588",
+            "on-tertiary-container": "#ffcba3",
+            "on-secondary-fixed-variant": "#474646",
+            "surface-bright": "#f9f9f7",
+            "secondary-container": "#e5e2e1",
+            "surface-variant": "#e2e3e1",
+            "secondary-fixed": "#e5e2e1",
+            "surface-dim": "#dadad8",
+            "tertiary-fixed-dim": "#ffb77d",
+            "inverse-on-surface": "#f1f1ef",
+            "on-tertiary-fixed": "#2f1500",
+            "on-surface": "#1a1c1b",
+            "secondary": "#5f5e5e",
+            "on-primary-fixed": "#05006c",
+            "on-primary-fixed-variant": "#1e13e2",
+            "error": "#ba1a1a",
+            "inverse-primary": "#c0c1ff",
+            "on-primary": "#ffffff",
+            "on-secondary-container": "#656464",
+            "background": "#f9f9f7",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "on-surface-variant": "#454556",
+            "surface-container-highest": "#e2e3e1",
+            "tertiary-container": "#8d4b00",
+            "primary-fixed": "#e1e0ff",
+            "primary": "#1a0be0",
+            "tertiary": "#6b3700",
+            "surface": "#f9f9f7"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.25rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2rem",
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Hanken Grotesk"],
+            "amount-hero": ["Hanken Grotesk"],
+            "headline-md": ["Hanken Grotesk"],
+            "label-caption": ["Hanken Grotesk"],
+            "amount-card": ["Hanken Grotesk"],
+            "body-md": ["Hanken Grotesk"],
+            "body-sm": ["Hanken Grotesk"],
+            "title-card": ["Hanken Grotesk"],
+            "headline-sm": ["Hanken Grotesk"],
+            "body-lg": ["Hanken Grotesk"],
+            "amount-row": ["Hanken Grotesk"],
+            "label-caps": ["Hanken Grotesk"],
+            "display-hero": ["Hanken Grotesk"]
+          },
+          "fontSize": {
+            "headline-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "amount-hero": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "headline-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "amount-card": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["15px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "title-card": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-sm": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "amount-row": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600" }],
+            "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #ededeb;
+      font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scroll {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex items-center justify-center p-0 md:p-6 text-on-surface">
+<!-- iPhone 15 Pro Hardware Frame (393px × 852px) -->
+<div class="relative w-full max-w-[393px] h-[852px] bg-[#F7F7F5] overflow-hidden flex flex-col shadow-2xl md:rounded-[54px] border-0 md:border-[10px] md:border-[#1F1F1E]">
+<!-- iOS Dynamic Island & Status Bar (59pt safe top) -->
+<header class="relative w-full h-[59px] shrink-0 flex items-end justify-between px-7 pb-2 select-none z-30">
+<!-- Dynamic Island Mockup -->
+<div class="absolute top-3 left-1/2 -translate-x-1/2 w-[124px] h-[34px] bg-[#000000] rounded-full flex items-center justify-between px-3 pointer-events-none">
+<div class="w-3 h-3 rounded-full bg-[#121212] border border-[#222]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#080838] opacity-70"></div>
+</div>
+<!-- Time Indicator -->
+<span class="font-title-card text-title-card text-on-surface tracking-tight font-semibold text-[15px] pl-1">09:41</span>
+<!-- Status Bar Icons (Cellular, Wi-Fi, Battery) -->
+<div class="flex items-center gap-2 pr-1 text-on-surface">
+<span class="material-symbols-outlined text-[16px] leading-none" data-icon="signal_cellular_alt">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[16px] leading-none" data-icon="wifi">wifi</span>
+<!-- Native Battery Capsule -->
+<div class="w-[22px] h-[11px] border border-on-surface rounded-[3px] p-[1.5px] flex items-center relative">
+<div class="h-full w-[80%] bg-on-surface rounded-[1.5px]"></div>
+<div class="absolute -right-[3px] top-1/2 -translate-y-1/2 w-[1.5px] h-[4px] bg-on-surface rounded-r-sm"></div>
+</div>
+</div>
+</header>
+<!-- Top App Navigation / Title Area -->
+<div class="w-full px-5 pt-3 pb-2 flex items-center justify-between z-20">
+<div class="flex items-center gap-2">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Cofre</h1>
+<div class="w-6 h-6 rounded-full bg-[#E8E8E4] flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[14px]" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+</div>
+<button aria-label="Definições e Filtros" class="w-9 h-9 rounded-full bg-surface-container-lowest border border-[#E8E8E4] flex items-center justify-center text-on-surface active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- Scrollable Content Canvas -->
+<main class="flex-1 overflow-y-auto custom-scroll px-5 pt-1 pb-28 space-y-4">
+<!-- Hero Card: Saldo no Cofre -->
+<section class="bg-surface-container-lowest rounded-3xl p-5 border border-[#E8E8E4] shadow-none">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-caps text-label-caps text-secondary tracking-wider uppercase">Total acumulado em poupança</span>
+<span class="inline-flex items-center gap-1 font-label-caption text-label-caption text-secondary bg-[#F7F7F5] px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-[13px] text-primary-container" data-icon="shield">shield</span>
+            Protegido
+          </span>
+</div>
+<div class="mt-1 mb-2">
+<div class="font-amount-hero text-amount-hero text-on-surface tracking-tight">8 120,00 €</div>
+</div>
+<!-- Taxa e Rendimento Informativo -->
+<div class="flex items-center gap-1.5 pb-5 pt-1 text-secondary border-b border-[#E8E8E4]">
+<span class="material-symbols-outlined text-[15px] text-primary-container" data-icon="trending_up">trending_up</span>
+<p class="font-body-sm text-body-sm text-secondary">Rendimento estimado: <span class="font-title-card text-on-surface">+3,2% TANB</span></p>
+</div>
+<!-- Botoes de Acao -->
+<div class="grid grid-cols-2 gap-3 pt-4">
+<!-- Depositar (CTA Deep Indigo) -->
+<button class="h-[52px] bg-primary-container text-white rounded-[14px] font-title-card text-title-card flex items-center justify-center gap-2 active:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_downward">arrow_downward</span>
+            Depositar
+          </button>
+<!-- Levantar (Secondary Hairline) -->
+<button class="h-[52px] bg-surface-container-lowest border border-[#E8E8E4] text-on-surface rounded-[14px] font-title-card text-title-card flex items-center justify-center gap-2 active:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_upward">arrow_upward</span>
+            Levantar
+          </button>
+</div>
+</section>
+<!-- Faixa Minimalista: Por Alocar -->
+<section class="bg-surface-container-lowest rounded-2xl p-3.5 px-4 border border-[#E8E8E4] flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#F7F7F5] flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[17px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div>
+<p class="font-label-caption text-label-caption text-secondary">Disponível no cofre</p>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Por alocar: <span class="font-title-card text-on-surface">1 420,00 €</span></p>
+</div>
+</div>
+<button class="h-8 px-3.5 bg-[#F7F7F5] border border-[#E8E8E4] rounded-full font-label-caption text-label-caption text-on-surface font-semibold hover:border-primary-container active:scale-95 transition-all">
+          Alocar
+        </button>
+</section>
+<!-- Secao: Objetivos de Poupança -->
+<section class="pt-2 space-y-3">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<h2 class="font-title-card text-title-card text-on-surface tracking-tight font-semibold">Objetivos de Poupança</h2>
+<span class="w-5 h-5 rounded-full bg-[#E8E8E4] text-secondary font-label-caps text-label-caps flex items-center justify-center">3</span>
+</div>
+<button class="inline-flex items-center gap-1 font-body-sm text-body-sm text-primary-container font-semibold active:opacity-75">
+<span class="material-symbols-outlined text-[16px]" data-icon="add">add</span>
+            Novo objetivo
+          </button>
+</div>
+<!-- Cartao Objetivo 1: Pecas para a KTM -->
+<article class="bg-surface-container-lowest rounded-3xl p-4.5 p-5 border border-[#E8E8E4] space-y-3 transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-2xl bg-[#F7F7F5] border border-[#E8E8E4] flex items-center justify-center text-[20px]">
+                🏍️
+              </div>
+<div>
+<h3 class="font-title-card text-title-card text-on-surface">Peças para a KTM</h3>
+<p class="font-body-sm text-body-sm text-secondary flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-secondary" data-icon="calendar_today">calendar_today</span>
+                  Até Dezembro 2026
+                </p>
+</div>
+</div>
+<span class="font-label-caps text-label-caps font-semibold text-primary-container bg-primary-fixed/40 px-2 py-1 rounded-md">56%</span>
+</div>
+<!-- Barra ultrafina 2pt / 4pt -->
+<div class="space-y-1.5 pt-1">
+<div class="w-full h-1.5 bg-[#E8E8E4] rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 56.6%;"></div>
+</div>
+<div class="flex justify-between items-center font-body-sm text-body-sm pt-0.5">
+<span class="font-title-card text-on-surface">680,00 €</span>
+<span class="text-secondary">de 1 200,00 €</span>
+</div>
+</div>
+</article>
+<!-- Cartao Objetivo 2: Viagem de verao -->
+<article class="bg-surface-container-lowest rounded-3xl p-5 border border-[#E8E8E4] space-y-3 transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-2xl bg-[#F7F7F5] border border-[#E8E8E4] flex items-center justify-center text-[20px]">
+                ✈️
+              </div>
+<div>
+<h3 class="font-title-card text-title-card text-on-surface">Viagem de verão</h3>
+<p class="font-body-sm text-body-sm text-secondary flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-secondary" data-icon="event">event</span>
+                  Julho 2027
+                </p>
+</div>
+</div>
+<span class="font-label-caps text-label-caps font-semibold text-primary-container bg-primary-fixed/40 px-2 py-1 rounded-md">70%</span>
+</div>
+<div class="space-y-1.5 pt-1">
+<div class="w-full h-1.5 bg-[#E8E8E4] rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 70%;"></div>
+</div>
+<div class="flex justify-between items-center font-body-sm text-body-sm pt-0.5">
+<span class="font-title-card text-on-surface">2 100,00 €</span>
+<span class="text-secondary">de 3 000,00 €</span>
+</div>
+</div>
+</article>
+<!-- Cartao Objetivo 3: Fundo de emergencia -->
+<article class="bg-surface-container-lowest rounded-3xl p-5 border border-[#E8E8E4] space-y-3 transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-2xl bg-[#F7F7F5] border border-[#E8E8E4] flex items-center justify-center text-[20px]">
+                🛡️
+              </div>
+<div>
+<h3 class="font-title-card text-title-card text-on-surface">Fundo de emergência</h3>
+<p class="font-body-sm text-body-sm text-secondary flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-secondary" data-icon="all_inclusive">all_inclusive</span>
+                  Sem prazo fixo
+                </p>
+</div>
+</div>
+<span class="font-label-caps text-label-caps font-semibold text-primary-container bg-primary-fixed/40 px-2 py-1 rounded-md">78%</span>
+</div>
+<div class="space-y-1.5 pt-1">
+<div class="w-full h-1.5 bg-[#E8E8E4] rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 78.4%;"></div>
+</div>
+<div class="flex justify-between items-center font-body-sm text-body-sm pt-0.5">
+<span class="font-title-card text-on-surface">3 920,00 €</span>
+<span class="text-secondary">de 5 000,00 €</span>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- BottomNavBar Conforme Shared Components JSON -->
+<!-- Destination 4: "Cofre" is strictly active -->
+<nav aria-label="Navegação Principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-3 pt-2 pb-8 max-w-[393px] mx-auto bg-surface-container-lowest/90 backdrop-blur-md border-t border-surface-container-high">
+<!-- Início -->
+<button aria-label="Início" class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined text-[22px]" data-icon="home">home</span>
+<span class="text-label-caps font-label-caps">Início</span>
+</button>
+<!-- Histórico -->
+<button aria-label="Histórico" class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined text-[22px]" data-icon="receipt_long">receipt_long</span>
+<span class="text-label-caps font-label-caps">Histórico</span>
+</button>
+<!-- Orçamentos -->
+<button aria-label="Orçamentos" class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined text-[22px]" data-icon="pie_chart">pie_chart</span>
+<span class="text-label-caps font-label-caps">Orçamentos</span>
+</button>
+<!-- Cofre (Active Destination) -->
+<button aria-current="page" aria-label="Cofre" class="flex flex-col items-center justify-center text-primary-container gap-1 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined text-[22px]" data-icon="savings" data-weight="fill" style="font-variation-settings: 'FILL' 1;">savings</span>
+<span class="text-label-caps font-label-caps font-bold">Cofre</span>
+</button>
+<!-- Mais -->
+<button aria-label="Mais" class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined text-[22px]" data-icon="more_horiz">more_horiz</span>
+<span class="text-label-caps font-label-caps">Mais</span>
+</button>
+</nav>
+<!-- Native iOS Home Indicator Bar (34pt area) -->
+<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-[134px] h-[5px] bg-[#111111] rounded-full z-50 pointer-events-none opacity-85"></div>
+</div>
+</body></html>

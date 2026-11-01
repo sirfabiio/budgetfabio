@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+
+<html lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recorrentes e Subscrições</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Hanken Grotesk -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#2f3130",
+            "secondary-fixed-dim": "#c8c6c5",
+            "on-error-container": "#93000a",
+            "surface-container-low": "#f4f4f2",
+            "on-secondary-fixed": "#1c1b1b",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#c0c1ff",
+            "primary-container": "#3b3bf5",
+            "surface-tint": "#3e3ef7",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e8e8e6",
+            "on-background": "#1a1c1b",
+            "surface-container": "#eeeeec",
+            "outline-variant": "#c6c4d9",
+            "error-container": "#ffdad6",
+            "on-primary-container": "#d1d1ff",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#ffdcc3",
+            "outline": "#767588",
+            "on-tertiary-container": "#ffcba3",
+            "on-secondary-fixed-variant": "#474646",
+            "surface-bright": "#f9f9f7",
+            "secondary-container": "#e5e2e1",
+            "surface-variant": "#e2e3e1",
+            "secondary-fixed": "#e5e2e1",
+            "surface-dim": "#dadad8",
+            "tertiary-fixed-dim": "#ffb77d",
+            "inverse-on-surface": "#f1f1ef",
+            "on-tertiary-fixed": "#2f1500",
+            "on-surface": "#1a1c1b",
+            "secondary": "#5f5e5e",
+            "on-primary-fixed": "#05006c",
+            "on-primary-fixed-variant": "#1e13e2",
+            "error": "#ba1a1a",
+            "inverse-primary": "#c0c1ff",
+            "on-primary": "#ffffff",
+            "on-secondary-container": "#656464",
+            "background": "#f9f9f7",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "on-surface-variant": "#454556",
+            "surface-container-highest": "#e2e3e1",
+            "tertiary-container": "#8d4b00",
+            "primary-fixed": "#e1e0ff",
+            "primary": "#1a0be0",
+            "tertiary": "#6b3700",
+            "surface": "#f9f9f7"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.25rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2rem",
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Hanken Grotesk"],
+            "amount-hero": ["Hanken Grotesk"],
+            "headline-md": ["Hanken Grotesk"],
+            "label-caption": ["Hanken Grotesk"],
+            "amount-card": ["Hanken Grotesk"],
+            "body-md": ["Hanken Grotesk"],
+            "body-sm": ["Hanken Grotesk"],
+            "title-card": ["Hanken Grotesk"],
+            "headline-sm": ["Hanken Grotesk"],
+            "body-lg": ["Hanken Grotesk"],
+            "amount-row": ["Hanken Grotesk"],
+            "label-caps": ["Hanken Grotesk"],
+            "display-hero": ["Hanken Grotesk"]
+          },
+          "fontSize": {
+            "headline-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "amount-hero": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "headline-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "amount-card": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["15px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "title-card": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-sm": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "amount-row": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600" }],
+            "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* iOS Custom Toggle Switch */
+    .ios-switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 28px;
+    }
+    .ios-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .ios-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #E8E8E4;
+      transition: .25s ease-in-out;
+      border-radius: 9999px;
+    }
+    .ios-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .25s cubic-bezier(0.4, 0.0, 0.2, 1);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+    }
+    input:checked + .ios-slider {
+      background-color: #3b3bf5;
+    }
+    input:checked + .ios-slider:before {
+      transform: translateX(18px);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-low text-on-surface antialiased min-h-screen flex justify-center selection:bg-primary-container selection:text-white">
+<!-- iPhone 15 Pro Wrapper (393px width constraint) -->
+<div class="w-full max-w-[393px] min-h-[852px] bg-[#F7F7F5] relative flex flex-col pb-32 overflow-x-hidden border-x border-surface-container-high/60 shadow-2xl">
+<!-- Native iOS 15 Pro Status Bar (59pt height inset with Dynamic Island clearance) -->
+<header class="w-full pt-3 px-7 flex justify-between items-center z-40 select-none">
+<div class="text-[15px] font-semibold tracking-tight text-on-surface">9:41</div>
+<!-- Simulated Dynamic Island / Hardware Space Indicator -->
+<div class="w-[122px] h-[34px] bg-black rounded-full absolute left-1/2 -translate-x-1/2 top-2 flex items-center justify-end px-3">
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 mr-1"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-neutral-700"></div>
+</div>
+<div class="flex items-center space-x-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[17px] leading-none" data-icon="signal_cellular_alt">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[17px] leading-none" data-icon="wifi">wifi</span>
+<span class="material-symbols-outlined text-[20px] leading-none" data-icon="battery_full">battery_full</span>
+</div>
+</header>
+<!-- Top App Header: Finanças Nav Bar & Modal Access -->
+<nav class="flex justify-between items-center w-full px-5 pt-3 pb-2 max-w-[393px] mx-auto">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-[#E8E8E4] flex items-center justify-center text-xs font-semibold text-on-surface select-none">
+          JD
+        </div>
+<span class="text-label-caption font-label-caption text-secondary">Finanças</span>
+</div>
+<button class="flex items-center gap-1.5 py-1 px-3 rounded-full bg-surface-container-lowest border border-[#E8E8E4] text-primary-container text-body-sm font-semibold active:opacity-70 transition-opacity" onclick="openBottomSheet()">
+<span class="material-symbols-outlined text-[16px] leading-none" data-icon="add">add</span>
+<span>Adicionar</span>
+</button>
+</nav>
+<!-- Native iOS Large Title Header -->
+<section class="px-5 pt-2 pb-4 flex justify-between items-end">
+<div>
+<p class="text-label-caps font-label-caps text-secondary uppercase tracking-wider mb-0.5">Gestão Periódica</p>
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Recorrentes</h1>
+</div>
+<button class="h-9 px-3.5 rounded-full bg-primary-container text-white flex items-center gap-1 text-body-sm font-semibold shadow-sm active:scale-95 transition-all" onclick="openBottomSheet()">
+<span class="material-symbols-outlined text-[16px] leading-none" data-icon="add">add</span>
+<span>Nova</span>
+</button>
+</section>
+<!-- Main Content Canvas -->
+<main class="px-5 space-y-4 flex-1">
+<!-- Top Summary Card (Bento/Card Level 1) -->
+<div class="bg-surface-container-lowest rounded-[24px] border border-[#E8E8E4] p-5 shadow-none transition-all">
+<div class="flex items-start justify-between">
+<div>
+<span class="text-label-caps font-label-caps text-secondary uppercase block mb-1">Total Mensal Previsto</span>
+<div class="flex items-baseline gap-1.5">
+<span class="text-amount-hero font-amount-hero text-on-surface">148,80 €</span>
+<span class="text-body-sm font-body-sm text-secondary">/ mês</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-2xl bg-surface-container flex items-center justify-center text-primary-container border border-[#E8E8E4]">
+<span class="material-symbols-outlined text-[20px]" data-icon="calendar_month">calendar_month</span>
+</div>
+</div>
+<div class="mt-4 pt-3.5 border-t border-[#E8E8E4] flex items-center justify-between text-body-sm font-body-sm">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-secondary font-medium">6 despesas ativas</span>
+</div>
+<div class="flex items-center gap-1 text-secondary">
+<span>Próxima:</span>
+<span class="font-semibold text-on-surface">28 Out</span>
+</div>
+</div>
+</div>
+<!-- Segmented Category Pill Filter -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+<button class="h-8 px-3.5 rounded-full bg-on-surface text-white text-label-caption font-label-caption flex items-center justify-center">Todas (6)</button>
+<button class="h-8 px-3.5 rounded-full bg-surface-container-lowest border border-[#E8E8E4] text-secondary text-label-caption font-label-caption flex items-center justify-center">Habitação</button>
+<button class="h-8 px-3.5 rounded-full bg-surface-container-lowest border border-[#E8E8E4] text-secondary text-label-caption font-label-caption flex items-center justify-center">Lazer &amp; Media</button>
+<button class="h-8 px-3.5 rounded-full bg-surface-container-lowest border border-[#E8E8E4] text-secondary text-label-caption font-label-caption flex items-center justify-center">Transportes</button>
+</div>
+<!-- Recurrent Subscriptions Grouped List Card -->
+<div class="bg-surface-container-lowest rounded-[24px] border border-[#E8E8E4] overflow-hidden">
+<!-- 1. Renda da Casa -->
+<div class="p-4 flex items-center justify-between transition-colors hover:bg-surface-bright">
+<div class="flex items-center gap-3.5 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-surface-container-low border border-[#E8E8E4] flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="home_work">home_work</span>
+</div>
+<div class="truncate">
+<div class="flex items-center gap-2">
+<h2 class="text-title-card font-title-card text-on-surface truncate">Renda da Casa</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-secondary text-[10px] font-semibold uppercase tracking-wider">Mensal</span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary">Próximo: <span class="font-medium text-on-surface">1 Nov</span></p>
+</div>
+</div>
+<div class="flex items-center gap-3 ml-2 flex-shrink-0">
+<span class="text-amount-row font-amount-row text-on-surface">650,00 €</span>
+<label class="ios-switch">
+<input checked="" type="checkbox"/>
+<span class="ios-slider"></span>
+</label>
+</div>
+</div>
+<div class="ml-16 h-[0.5px] bg-[#E8E8E4]"></div>
+<!-- 2. Spotify Familiar -->
+<div class="p-4 flex items-center justify-between transition-colors hover:bg-surface-bright">
+<div class="flex items-center gap-3.5 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-surface-container-low border border-[#E8E8E4] flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="graphic_eq">graphic_eq</span>
+</div>
+<div class="truncate">
+<div class="flex items-center gap-2">
+<h2 class="text-title-card font-title-card text-on-surface truncate">Spotify Familiar</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-secondary text-[10px] font-semibold uppercase tracking-wider">Mensal</span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary">Próximo: <span class="font-medium text-on-surface">28 Out</span></p>
+</div>
+</div>
+<div class="flex items-center gap-3 ml-2 flex-shrink-0">
+<span class="text-amount-row font-amount-row text-on-surface">13,99 €</span>
+<label class="ios-switch">
+<input checked="" type="checkbox"/>
+<span class="ios-slider"></span>
+</label>
+</div>
+</div>
+<div class="ml-16 h-[0.5px] bg-[#E8E8E4]"></div>
+<!-- 3. Ginásio -->
+<div class="p-4 flex items-center justify-between transition-colors hover:bg-surface-bright">
+<div class="flex items-center gap-3.5 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-surface-container-low border border-[#E8E8E4] flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="fitness_center">fitness_center</span>
+</div>
+<div class="truncate">
+<div class="flex items-center gap-2">
+<h2 class="text-title-card font-title-card text-on-surface truncate">Ginásio</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-secondary text-[10px] font-semibold uppercase tracking-wider">Mensal</span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary">Próximo: <span class="font-medium text-on-surface">31 Out</span></p>
+</div>
+</div>
+<div class="flex items-center gap-3 ml-2 flex-shrink-0">
+<span class="text-amount-row font-amount-row text-on-surface">35,00 €</span>
+<label class="ios-switch">
+<input checked="" type="checkbox"/>
+<span class="ios-slider"></span>
+</label>
+</div>
+</div>
+<div class="ml-16 h-[0.5px] bg-[#E8E8E4]"></div>
+<!-- 4. Seguro Automóvel -->
+<div class="p-4 flex items-center justify-between transition-colors hover:bg-surface-bright">
+<div class="flex items-center gap-3.5 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-surface-container-low border border-[#E8E8E4] flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="directions_car">directions_car</span>
+</div>
+<div class="truncate">
+<div class="flex items-center gap-2">
+<h2 class="text-title-card font-title-card text-on-surface truncate">Seguro Automóvel</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-secondary text-[10px] font-semibold uppercase tracking-wider">Anual</span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary">Próximo: <span class="font-medium text-on-surface">15 Mar</span></p>
+</div>
+</div>
+<div class="flex items-center gap-3 ml-2 flex-shrink-0">
+<span class="text-amount-row font-amount-row text-on-surface">240,00 €</span>
+<label class="ios-switch">
+<input checked="" type="checkbox"/>
+<span class="ios-slider"></span>
+</label>
+</div>
+</div>
+<div class="ml-16 h-[0.5px] bg-[#E8E8E4]"></div>
+<!-- 5. Passe Navegante Metropolitano -->
+<div class="p-4 flex items-center justify-between transition-colors hover:bg-surface-bright">
+<div class="flex items-center gap-3.5 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-surface-container-low border border-[#E8E8E4] flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="subway">subway</span>
+</div>
+<div class="truncate">
+<div class="flex items-center gap-2">
+<h2 class="text-title-card font-title-card text-on-surface truncate">Passe Navegante</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-secondary text-[10px] font-semibold uppercase tracking-wider">Mensal</span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary">Próximo: <span class="font-medium text-on-surface">1 Nov</span></p>
+</div>
+</div>
+<div class="flex items-center gap-3 ml-2 flex-shrink-0">
+<span class="text-amount-row font-amount-row text-on-surface">40,00 €</span>
+<label class="ios-switch">
+<input checked="" type="checkbox"/>
+<span class="ios-slider"></span>
+</label>
+</div>
+</div>
+<div class="ml-16 h-[0.5px] bg-[#E8E8E4]"></div>
+<!-- 6. Jornal Público -->
+<div class="p-4 flex items-center justify-between transition-colors hover:bg-surface-bright">
+<div class="flex items-center gap-3.5 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-surface-container-low border border-[#E8E8E4] flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="newspaper">newspaper</span>
+</div>
+<div class="truncate">
+<div class="flex items-center gap-2">
+<h2 class="text-title-card font-title-card text-on-surface truncate">Jornal Público</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-secondary text-[10px] font-semibold uppercase tracking-wider">Mensal</span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary">Próximo: <span class="font-medium text-on-surface">10 Nov</span></p>
+</div>
+</div>
+<div class="flex items-center gap-3 ml-2 flex-shrink-0">
+<span class="text-amount-row font-amount-row text-on-surface">9,90 €</span>
+<label class="ios-switch">
+<input checked="" type="checkbox"/>
+<span class="ios-slider"></span>
+</label>
+</div>
+</div>
+</div>
+<!-- Quick Action / Informational Banner -->
+<div class="bg-surface-container-lowest/70 rounded-[20px] border border-[#E8E8E4] p-4 flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container" data-icon="insights">insights</span>
+<div>
+<p class="text-body-sm font-semibold text-on-surface">Lembrete de Cobrança Antecipada</p>
+<p class="text-label-caption font-label-caption text-secondary mt-0.5">As notificações são enviadas 2 dias úteis antes de cada liquidação automática.</p>
+</div>
+</div>
+</main>
+<!-- Native iOS Bottom Sheet: 'Adicionar Regra Recorrente' Modal Overlay -->
+<div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none flex items-end justify-center" id="bottomSheetBackdrop">
+<div class="w-full max-w-[393px] bg-surface-container-lowest rounded-t-[32px] border-t border-[#E8E8E4] p-5 pb-9 transform transition-transform duration-300 translate-y-full flex flex-col space-y-4 shadow-2xl" id="bottomSheetPanel">
+<!-- iOS Sheet Drag Handle -->
+<div class="w-10 h-1.5 bg-surface-container-high rounded-full mx-auto self-center mb-1"></div>
+<div class="flex items-center justify-between pt-1">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Nova Regra Recorrente</h3>
+<p class="text-body-sm font-body-sm text-secondary">Configuração do débito programado</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-secondary active:scale-90 transition-transform" onclick="closeBottomSheet()">
+<span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+</button>
+</div>
+<div class="space-y-3.5 pt-1">
+<!-- Nome da Regra -->
+<div>
+<label class="block text-label-caps font-label-caps text-secondary uppercase mb-1.5 ml-1">Nome do Serviço</label>
+<div class="h-[52px] bg-[#FFFFFF] border border-[#E8E8E4] focus-within:border-primary-container rounded-[14px] px-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="label">label</span>
+<input class="w-full bg-transparent border-0 p-0 text-title-card text-on-surface placeholder:text-secondary-fixed-dim focus:ring-0" placeholder="Ex: Netflix" type="text"/>
+</div>
+</div>
+<!-- Montante Previsto -->
+<div>
+<label class="block text-label-caps font-label-caps text-secondary uppercase mb-1.5 ml-1">Montante Previsto</label>
+<div class="h-[52px] bg-[#FFFFFF] border border-[#E8E8E4] focus-within:border-primary-container rounded-[14px] px-4 flex items-center justify-between">
+<span class="text-body-md text-secondary">Valor</span>
+<div class="flex items-baseline gap-1">
+<input class="w-24 text-right bg-transparent border-0 p-0 text-headline-sm font-bold text-on-surface focus:ring-0" type="text" value="15,99"/>
+<span class="text-title-card font-semibold text-secondary">€</span>
+</div>
+</div>
+</div>
+<!-- Seletor de Frequência (Segmented Control iOS HIG) -->
+<div>
+<label class="block text-label-caps font-label-caps text-secondary uppercase mb-1.5 ml-1">Frequência</label>
+<div class="h-10 bg-surface-container-low rounded-[12px] p-1 border border-[#E8E8E4] flex">
+<button class="freq-btn flex-1 rounded-[9px] text-body-sm font-medium text-secondary transition-all" onclick="selectFreq(this)">Semanal</button>
+<button class="freq-btn flex-1 rounded-[9px] bg-white text-on-surface font-semibold shadow-sm border border-black/5 transition-all" onclick="selectFreq(this)">Mensal</button>
+<button class="freq-btn flex-1 rounded-[9px] text-body-sm font-medium text-secondary transition-all" onclick="selectFreq(this)">Anual</button>
+</div>
+</div>
+<!-- Próxima Data de Cobrança -->
+<div>
+<label class="block text-label-caps font-label-caps text-secondary uppercase mb-1.5 ml-1">Próxima Cobrança</label>
+<div class="h-[52px] bg-[#FFFFFF] border border-[#E8E8E4] focus-within:border-primary-container rounded-[14px] px-4 flex items-center justify-between">
+<div class="flex items-center gap-2.5 text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="event">event</span>
+<span class="text-body-md font-medium">1 de Novembro, 2024</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="calendar_today">calendar_today</span>
+</div>
+</div>
+</div>
+<!-- Primary Action CTA Button -->
+<div class="pt-2">
+<button class="w-full h-[52px] bg-[#3B3BF5] text-white rounded-[14px] text-title-card font-semibold flex items-center justify-center shadow-none active:brightness-90 transition-all" onclick="closeBottomSheet()">
+            Guardar Regra
+          </button>
+</div>
+</div>
+</div>
+<!-- Shared Component: BottomNavBar (Semantic Shell & Docked iOS Tab Bar) -->
+<!-- Destination Rule & Mapping: 5 standard tabs from JSON, 'Histórico' / 'Orçamentos' mapping to recurring expenses context. Active state set on 'Orçamentos' -->
+<nav class="fixed bottom-0 left-0 w-full z-40 bg-surface-container-lowest/90 backdrop-blur-md border-t border-surface-container-high">
+<div class="flex justify-around items-center px-3 pt-2 pb-8 max-w-[393px] mx-auto">
+<!-- Tab 1: Início -->
+<a class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100" href="#inicio">
+<span class="material-symbols-outlined text-[22px]" data-icon="home">home</span>
+<span class="text-[11px] font-medium leading-[14px] tracking-[0.06em]">Início</span>
+</a>
+<!-- Tab 2: Histórico -->
+<a class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100" href="#historico">
+<span class="material-symbols-outlined text-[22px]" data-icon="receipt_long">receipt_long</span>
+<span class="text-[11px] font-medium leading-[14px] tracking-[0.06em]">Histórico</span>
+</a>
+<!-- Tab 3: Orçamentos (Active state for recurring & commitments) -->
+<a class="flex flex-col items-center justify-center text-primary-container gap-1 active:scale-95 transition-transform duration-100 font-semibold" href="#orcamentos">
+<span class="material-symbols-outlined text-[22px]" data-icon="pie_chart" data-weight="fill" style="font-variation-settings: 'FILL' 1;">pie_chart</span>
+<span class="text-[11px] font-semibold leading-[14px] tracking-[0.06em]">Orçamentos</span>
+</a>
+<!-- Tab 4: Cofre -->
+<a class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100" href="#cofre">
+<span class="material-symbols-outlined text-[22px]" data-icon="savings">savings</span>
+<span class="text-[11px] font-medium leading-[14px] tracking-[0.06em]">Cofre</span>
+</a>
+<!-- Tab 5: Mais -->
+<a class="flex flex-col items-center justify-center text-secondary gap-1 active:scale-95 transition-transform duration-100" href="#mais">
+<span class="material-symbols-outlined text-[22px]" data-icon="more_horiz">more_horiz</span>
+<span class="text-[11px] font-medium leading-[14px] tracking-[0.06em]">Mais</span>
+</a>
+</div>
+<!-- iOS Home Indicator -->
+<div class="w-32 h-1 bg-black/20 rounded-full mx-auto -mt-5 mb-2"></div>
+</nav>
+</div>
+<script>
+    // Modal Bottom Sheet Control
+    const backdrop = document.getElementById('bottomSheetBackdrop');
+    const panel = document.getElementById('bottomSheetPanel');
+
+    function openBottomSheet() {
+      backdrop.classList.remove('pointer-events-none', 'opacity-0');
+      backdrop.classList.add('opacity-100');
+      panel.classList.remove('translate-y-full');
+      panel.classList.add('translate-y-0');
+    }
+
+    function closeBottomSheet() {
+      backdrop.classList.remove('opacity-100');
+      backdrop.classList.add('opacity-0', 'pointer-events-none');
+      panel.classList.remove('translate-y-0');
+      panel.classList.add('translate-y-full');
+    }
+
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) {
+        closeBottomSheet();
+      }
+    });
+
+    // Segmented Control Selector
+    function selectFreq(element) {
+      const buttons = document.querySelectorAll('.freq-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-white', 'text-on-surface', 'font-semibold', 'shadow-sm', 'border', 'border-black/5');
+        btn.classList.add('text-secondary', 'font-medium');
+      });
+      element.classList.remove('text-secondary', 'font-medium');
+      element.classList.add('bg-white', 'text-on-surface', 'font-semibold', 'shadow-sm', 'border', 'border-black/5');
+    }
+  </script>
+</body></html>
