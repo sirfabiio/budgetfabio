@@ -81,7 +81,7 @@ Foram adicionados dois extras. Nenhum usa capabilities pagas nem altera o compor
 
 ## CI: como gerar o `.ipa`
 
-O workflow [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml) corre num runner `macos-15` em cada push, pull request ou execução manual (*Actions → Build IPA → Run workflow*):
+O workflow [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml) corre num runner `macos-15` em cada push de código para a `main` (alterações só em `.md` ou `design/` não disparam o CI) ou à mão em *Actions → Build IPA → Run workflow*. Como o repositório é privado, cada execução (~2 min em macOS) gasta a quota gratuita mensal de Actions do GitHub. O tempo limite é de 20 minutos e o `.ipa` fica guardado 30 dias.
 
 1. `brew install xcodegen` e `xcodegen generate` (gera `Orcamento.xcodeproj` e `App/Info.plist`).
 2. **Testes unitários** num simulador iPhone (`xcodebuild test`). Se algum falhar, o build falha.

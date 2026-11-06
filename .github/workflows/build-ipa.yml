@@ -1,9 +1,13 @@
 name: Build IPA
 
+# Repositório privado: cada minuto em macOS gasta a quota gratuita do GitHub.
+# Por isso só compila em pushes de código para a main ou quando pedido à mão.
 on:
   push:
-    branches: ["**"]
-  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "design/**"
   workflow_dispatch:
 
 concurrency:
@@ -13,7 +17,7 @@ concurrency:
 jobs:
   build:
     runs-on: macos-15
-    timeout-minutes: 45
+    timeout-minutes: 20
     env:
       APP_NAME: Orcamento
     steps:
@@ -100,6 +104,7 @@ jobs:
           name: ${{ env.APP_NAME }}-ipa
           path: ${{ env.APP_NAME }}.ipa
           if-no-files-found: error
+          retention-days: 30
 
       - name: Resumo dos testes e do .ipa
         if: always()
